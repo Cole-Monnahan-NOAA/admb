@@ -14,7 +14,7 @@ notifications:
 
 env:
   global:
-    - secure: "JlhbU9Nr+4de/dd6F2w59Q0fvQtNcoZy2qYV6nrT8lhtdvVHA+UpvAv/AQLQq1ZwzkUEQHGfU88yhtulFgNusFwH70YOJegunXxdSH2Oe64EIfRg059fe+ncV+sDWahW/oKgv3AVJOwxanC6N2tuIEni1GXqxREo4NPdMRJPgR8YL3AxHHX8JoqZBQpOUcFCmmDZhSBGFmrw352JMGfdJCFCBzcGhIBOfuvjbX3CDJQA7c9FijSIxycTJGAdVS4OULtj/uAXnzuMIkvkT0SUMkSkD/yV/d4c9mOHvZQqRXnOOtAHKNp0FBxDnoojGEgisVCLWLQlpJiPMA8KMKmwD3Qn/WM6bFxMeLFd+RlyqKhOaXLG6q35AZ37iYgia0t6zJHZznUHf8MnrBOi91heD+VTORQmPg6XMgk7GWJ5RUgpYBQybyxVv26hJPlFxAW7xGrmR7NwH6CgDYffHulYMDuHftD7V5EikL1CBAzy3TVtyqD/mQgsx2byvk7I27ASSf3PSYpyvh/2G3cqG3iRP70xn2uLUfS+ijaBpBYcdZKAtGEmnZIRCbwuABQUSvG7T4nDrwLYgPsrbujb/PZ560w/bP5xK9iTsyTk7DvtX7qApX4UJqNZNmqOBYMSu3CJm/1hnTqmKeUUUNoj6qAMPIV5LgVxcvUBX4yLqP7GiqY="
+    - secure:
 
 before_install:
   - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
