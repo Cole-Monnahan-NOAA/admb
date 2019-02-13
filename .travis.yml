@@ -14,7 +14,7 @@ notifications:
 
 env:
   global:
-    - secure:
+    - secure: "LdmWcVSKPqXYxjtUTB3k3ld8ZAPO87GSPUT9gAlpwb+HAUKGY1PjLIYOOZd2TSJCda8ukbs1cuFU08OLqFhvLL27JFNiIpnOGgUYe1z8vQbIROpMAVGWzmT2gPGL5sH6U4sAQXOGC0eAPJdjHc2fdauRH64OUvfU/kQ5RSgwOOk="
 
 before_install:
   - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
