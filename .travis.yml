@@ -11,6 +11,25 @@ branches:
 notifications:
   email: false
 
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "gLPB2O2wRnmF5cDcdnKqkQEAVCfNHjk20B9b92h/c0ws7YOw1TQ37ueT0MYdMm306v4x2Q+SDMgb/17C0G0K/rqls6AbYMhfpWWQkH+zkv6gamAIDTYFhPSRj9+qyh6pShNUbjXIIHmf3g+4V40LcPlQH/Q+2c6cCO8zcPpGxXrs5J3nh//nQ6pJLgi5iQN5mTJbMdmO7euMMShqO36eVNFT5p0AfLbJkuDgE+A+GrGUPYZ8RAOZ4c/YnKHtDeEu8IvjoM+9mudbQKf66AatXAwkw7vV63Qcw2Vt7eGe94i2uyaNGptc76XibHT6pf6QpawkXDSyFtd7hZ1GVyAxuf2/eICtMUrusAq1TIhCRzwr25SjjSJhBS8trBk7QV20uAeA/3BgODjskkY4rYJIF7rOOy33i65Q9L1l+My3/ufi81pEa0BEKo69bkRePUY6FpWZgu4Y9hXTbiNFo/5+2C3xujZ6sQAO+UGBlK0rljXCiwNqgTiatTa3VQ57QMjplok2AIc28+uh7NHhKNFWTMsz5VJZTr7OA+wyabdx5hD+TVCNstFit/toaqrWHEy/yDpqFRYq5fVG1esxuzFy7clUrJEtVqokUCzl5muMO45ToTgQLMlD5JsfV6kIpkj71Sn/fVTyvl249yqvPR3ospPUN0rSt56tUan604mHoHI="
+
+before_install:
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
+addons:
+  coverity_scan:
+    project:
+      name: "admb-project/admb"
+      description: "ADMB Project"
+    notification_email: johnoel@hawaii.edu
+    build_command_prepend: "make clean"
+    build_command: "make dist test"
+    branch_pattern: coverity_scan
+
 matrix:
   include:
   - os: linux
