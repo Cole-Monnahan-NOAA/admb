@@ -31,3 +31,4 @@ addons:
 
 script:
 - cat /home/travis/build/admb-project/admb/cov-int/scm_log.txt
+- find build
