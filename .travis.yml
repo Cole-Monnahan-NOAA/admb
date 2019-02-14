@@ -30,4 +30,4 @@ addons:
     branch_pattern: coverity_scan
 
 script:
-- make src
+- cat /home/travis/build/admb-project/admb/cov-int/scm_log.txt
