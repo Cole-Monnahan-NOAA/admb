@@ -26,17 +26,5 @@ addons:
       description: "ADMB Project"
     notification_email: johnoel@hawaii.edu
     build_command_prepend: "make clean"
-    build_command: "make --directory=src objects"
+    build_command: "make src"
     branch_pattern: coverity_scan
-
-matrix:
-  - os: linux
-    dist: xenial
-    env:
-     - SAFE_ONLY=yes
-     - DEBUG=yes
-    compiler: gcc
-    script:
-    - make clean
-    - make dist 
-    - make test
