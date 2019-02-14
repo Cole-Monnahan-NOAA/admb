@@ -28,3 +28,6 @@ addons:
     build_command_prepend: "make clean"
     build_command: "make src"
     branch_pattern: coverity_scan
+
+script:
+- make src
