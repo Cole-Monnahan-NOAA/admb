@@ -26,7 +26,7 @@ addons:
       description: "ADMB Project"
     notification_email: johnoel@hawaii.edu
     build_command_prepend: "make clean"
-    build_command: "make src"
+    build_command: "make --directory=src libs"
     branch_pattern: coverity_scan
 
 script:
