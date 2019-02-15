@@ -5,7 +5,6 @@ git:
   depth: false
 
 os: linux
-dist: xenial
 
 branches:
   only:
@@ -32,5 +31,4 @@ addons:
     branch_pattern: coverity_scan
 
 script:
-- cat /home/travis/build/admb-project/admb/cov-int/scm_log.txt
-- find build
+- cat /home/travis/build/admb-project/admb/cov-int/build_log.txt
