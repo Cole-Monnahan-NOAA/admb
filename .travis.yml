@@ -28,7 +28,7 @@ addons:
       description: "ADMB Project"
     notification_email: johnoel@hawaii.edu
     build_command_prepend: "make clean"
-    build_command: "make --directory=src dist gtests"
+    build_command: "make --directory=src dist"
     branch_pattern: coverity_scan
 
 script:
