@@ -31,4 +31,4 @@ addons:
     branch_pattern: coverity_scan
 
 script:
-- cat /home/travis/build/admb-project/admb/cov-int/build_log.txt
+- cat cov-int/build_log.txt

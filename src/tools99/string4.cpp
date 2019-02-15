@@ -49,7 +49,7 @@ istream& operator>>(istream& c, line_adstring& t)
     {
       cerr << "Error -- Maximum line_adstring length exceeded in "
            << "istream& operator>>(istream&, line_adstring&)" << endl;
-      ad_exit(1);
+      std::exit(1);
     }
     tmp[ii++] = ch;
     ch = (char)c.get();
