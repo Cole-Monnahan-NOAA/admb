@@ -4,9 +4,11 @@ language: cpp
 git:
   depth: false
 
+os: linux
+dist: xenial
+
 branches:
   only:
-    - master
     - coverity_scan
 
 notifications:
@@ -26,7 +28,7 @@ addons:
       description: "ADMB Project"
     notification_email: johnoel@hawaii.edu
     build_command_prepend: "make clean"
-    build_command: "make --directory=src libs"
+    build_command: "make --directory=src dist gtests"
     branch_pattern: coverity_scan
 
 script:
