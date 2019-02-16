@@ -31,4 +31,4 @@ addons:
     branch_pattern: coverity_scan
 
 script:
-- cat cov-int/build_log.txt
+- cat cov-int/build-log.txt
