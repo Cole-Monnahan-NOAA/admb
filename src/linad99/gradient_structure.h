@@ -91,12 +91,17 @@ public:
  */
 class gradient_structure
 {
+  static gradient_structure* _instance;
+
    static char cmpdif_file_name[61];
    static DF_FILE *fp;
  public:
 #if defined(NO_DERIVS)
    static int no_derivatives;
 #endif
+
+  static gradient_structure* get() { return _instance; }
+
  private:
    static long int USE_FOR_HESSIAN;
    static long int NVAR;

@@ -61,6 +61,8 @@ extern "C"{
   }
 }
 
+gradient_structure* gradient_structure::_instance = NULL;
+
 // *************************************************************
 // *************************************************************
 int ctlc_flag = 0;
@@ -512,6 +514,8 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
   {
     RETURN_PTR_CONTAINER[i] = 0;
   }
+
+  _instance = this;
 }
 
 /**
@@ -672,6 +676,8 @@ gradient_structure::~gradient_structure()
 
   delete fp;
   fp = NULL;
+
+  _instance = NULL;
 }
 
 /**
