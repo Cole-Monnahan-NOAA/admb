@@ -21,7 +21,20 @@ TEST_F(test_indvar_offset_list, make_indvar_list)
     independent_variables independents(1, 4);
 
     dvar_vector dvars(independents);
-
-
   }
+}
+TEST_F(test_indvar_offset_list, constructor)
+{
+  indvar_offset_list list;
+
+  ASSERT_TRUE(list.get_address(0) == NULL);
+
+  unsigned int index = 0;
+  double d0;
+  list.put_address(index, &d0);
+  ASSERT_TRUE(list.get_address(0) == &d0);
+
+  double d1;
+  list.put_address(index, &d1);
+  ASSERT_TRUE(list.get_address(0) == &d1);
 }

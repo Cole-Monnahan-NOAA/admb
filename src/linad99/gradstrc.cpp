@@ -467,8 +467,6 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
 
  // ****************************************************************
  // ****************************************************************
-
-     INDVAR_LIST.address = new double * [ (size_t) MAX_NVAR_OFFSET];
    }
 
    //allocate_dvariable_space();

@@ -41,6 +41,7 @@
 #ifndef __ADMB_GRADIENT_STRUCTURE_H__
 #define __ADMB_GRADIENT_STRUCTURE_H__
 
+#include <vector>
 #include <fstream>
 using std::ofstream;
 
@@ -90,21 +91,21 @@ public:
  */
 class indvar_offset_list
 {
-   // The number of independent variables
-   int nvar;
-   double **address;
+  std::vector<double*> address;
 
  public:
-   friend class gradient_structure;
-   inline double *get_address(const int &i)
-   {
-      return address[i];
-   }
-   void put_address(unsigned int &i, double *iaddress)
-   {
+  inline double *get_address(const unsigned int &i)
+  {
+    return i < address.size() ? address[i] : NULL;
+  }
+  void put_address(unsigned int &i, double *iaddress)
+  {
+    //  cerr << "In put_address i = " << i << "\n";
+    if (i < address.size())
       address[i] = iaddress;
-      //  cerr << "In put_address i = " << i << "\n";
-   }
+    else
+      address.push_back(iaddress);
+  }
 };
 
 /**
