@@ -54,7 +54,6 @@ class arr_list;
 class dvar_vector;
 class dvar_vector_position;
 class prevariable;
-class indvar_offset_list;
 class dependent_variables_information;
 class grad_stack;
 class uostream;
@@ -83,6 +82,29 @@ public:
   operator void*();
   operator double_and_int*();
   operator double*();
+};
+
+/**
+ * Description not yet available.
+ * \param
+ */
+class indvar_offset_list
+{
+   // The number of independent variables
+   int nvar;
+   double **address;
+
+ public:
+   friend class gradient_structure;
+   inline double *get_address(const int &i)
+   {
+      return address[i];
+   }
+   void put_address(unsigned int &i, double *iaddress)
+   {
+      address[i] = iaddress;
+      //  cerr << "In put_address i = " << i << "\n";
+   }
 };
 
 /**
@@ -132,7 +154,7 @@ class gradient_structure
    static int save_var_flag;
 
    static unsigned int MAX_DLINKS;
-indvar_offset_list* INDVAR_LIST;
+indvar_offset_list INDVAR_LIST;
    static int NUM_DEPENDENT_VARIABLES;
    static dependent_variables_information *DEPVARS_INFO;
 

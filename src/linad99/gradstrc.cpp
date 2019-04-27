@@ -445,8 +445,6 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
 #endif
 
    {
-     INDVAR_LIST = new indvar_offset_list;
-     memory_allocate_error("INDVAR_LIST",INDVAR_LIST);
  // ****************************************************************
  // ****************************************************************
       int nopt=0;
@@ -470,8 +468,7 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
  // ****************************************************************
  // ****************************************************************
 
-     INDVAR_LIST->address = new double * [ (size_t) MAX_NVAR_OFFSET];
-     memory_allocate_error("INDVAR_LIST->address",INDVAR_LIST->address);
+     INDVAR_LIST.address = new double * [ (size_t) MAX_NVAR_OFFSET];
    }
 
    //allocate_dvariable_space();
@@ -596,17 +593,6 @@ gradient_structure::~gradient_structure()
      RETURN_ARRAYS = NULL;
      delete [] RETURN_PTR_CONTAINER;
      RETURN_PTR_CONTAINER = NULL;
-  }
-  if (INDVAR_LIST == NULL)
-  {
-     null_ptr_err_message();
-     ad_exit(1);
-  }
-  else
-  {
-     delete [] INDVAR_LIST->address;
-     delete INDVAR_LIST;
-     INDVAR_LIST = NULL;
   }
   if (GRAD_STACK1 == NULL)
   {
