@@ -1,6 +1,11 @@
 #include <gtest/gtest.h>
 #include <fvar.hpp>
 
+extern "C"
+{
+  void test_ad_exit(const int exit_code);
+}
+
 class test_indvar_offset_list: public ::testing::Test {};
 
 TEST_F(test_indvar_offset_list, gradient_structure_instance)
@@ -37,4 +42,17 @@ TEST_F(test_indvar_offset_list, constructor)
   double d1;
   list.put_address(index, &d1);
   ASSERT_TRUE(list.get_address(0) == &d1);
+}
+TEST_F(test_indvar_offset_list, option_mno)
+{
+  ad_exit=&test_ad_exit;
+
+  gradient_structure::set_MAX_NVAR_OFFSET(0);
+
+  ad_comm::argc = 1;
+  ad_comm::argv = new char*[1];
+  ad_comm::argv[0] = { "-mno" };
+  ASSERT_ANY_THROW({
+    gradient_structure gs;
+  });
 }

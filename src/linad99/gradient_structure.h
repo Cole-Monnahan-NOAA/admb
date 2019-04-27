@@ -150,7 +150,6 @@ class gradient_structure
    static size_t CMPDIF_BUFFER_SIZE;
    static size_t GRADSTACK_BUFFER_SIZE;
 #endif
-   static unsigned int MAX_NVAR_OFFSET;
    static int save_var_file_flag;
    static int save_var_flag;
 
@@ -257,12 +256,14 @@ indvar_offset_list INDVAR_LIST;
    static void set_GRADSTACK_BUFFER_SIZE(const size_t i);
    static void set_GRADSTACK_BUFFER_BYTES(const size_t i);
 #endif
-   static void set_MAX_NVAR_OFFSET(unsigned int i);
    static void set_MAX_DLINKS(int i);
    static size_t NUM_GRADSTACK_BYTES_WRITTEN(void);
    static unsigned int get_MAX_DLINKS() { return MAX_DLINKS; }
    static void save_dependent_variable_position(const prevariable & v1);
    static unsigned long int max_last_offset;
+
+   /// Deprecated
+   static void set_MAX_NVAR_OFFSET(unsigned int i);
 
    friend class dlist;
    friend class grad_stack;

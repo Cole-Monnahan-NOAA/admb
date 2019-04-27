@@ -217,8 +217,9 @@ void gradient_structure::set_GRADSTACK_BUFFER_BYTES(const size_t i)
  */
 void gradient_structure::set_MAX_NVAR_OFFSET(unsigned int i)
 {
-  check_set_error("MAX_NVAR_OFFSET");
-  MAX_NVAR_OFFSET = i;
+  cerr << "Warning: Unused function "
+	  "\"void gradient_structure::set_MAX_NVAR_OFFSET(unsigned int i)\""
+	  " will be deprecated.\n";
 }
 
 /**

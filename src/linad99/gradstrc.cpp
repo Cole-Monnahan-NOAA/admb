@@ -104,19 +104,6 @@ dependent_variables_information * gradient_structure::DEPVARS_INFO=NULL;
 int gradient_structure::save_var_flag=0;
 int gradient_structure::save_var_file_flag=0;
 
-// should be int gradfile_handle;
-//int gradient_structure::_GRADFILE_PTR = NULL;
-
-// should be int gradfile_handle;
-//int gradient_structure::_GRADFILE_PTR1 = NULL;
-
-// should be int gradfile_handle;
-//int gradient_structure::_GRADFILE_PTR2 = NULL;
-
-// should be int gradfile_handle;
-//int gradient_structure::_VARSSAV_PTR = 0;
-
-unsigned int gradient_structure::MAX_NVAR_OFFSET = 5000;
 unsigned long gradient_structure::ARRAY_MEMBLOCK_SIZE = 0L; //js
 dlist * gradient_structure::GRAD_LIST;
 grad_stack* gradient_structure::GRAD_STACK1;
@@ -444,30 +431,15 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
    cout << "GRAD_STACK1= "<< farptr_tolong(GRAD_STACK1)<<"\n";
 #endif
 
-   {
- // ****************************************************************
- // ****************************************************************
-      int nopt=0;
-      int on=0;
-
-      if ( (on=option_match(ad_comm::argc,ad_comm::argv,"-mno",nopt))>-1)
-      {
-        if (nopt ==1)
-        {
-          const int i = atoi(ad_comm::argv[on+1]);
-          MAX_NVAR_OFFSET = static_cast<unsigned int>(i);
-        }
-        else
-        {
-          cerr << "Wrong number of options to -mno -- must be 1"
-            " you have " << nopt << endl;
-          ad_exit(1);
-        }
-      }
-
- // ****************************************************************
- // ****************************************************************
-   }
+  {
+    int nopt=0;
+    int on=0;
+    if ( (on=option_match(ad_comm::argc,ad_comm::argv,"-mno",nopt))>-1)
+    {
+      cerr << "Error: Command line option \"-mno\" is no longer used.\n";
+      ad_exit(1);
+    }
+  }
 
    //allocate_dvariable_space();
 
