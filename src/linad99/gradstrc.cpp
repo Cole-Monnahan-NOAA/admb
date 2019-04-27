@@ -61,6 +61,8 @@ extern "C"{
   }
 }
 
+gradient_structure* gradient_structure::_instance = NULL;
+
 // *************************************************************
 // *************************************************************
 int ctlc_flag = 0;
@@ -102,23 +104,9 @@ dependent_variables_information * gradient_structure::DEPVARS_INFO=NULL;
 int gradient_structure::save_var_flag=0;
 int gradient_structure::save_var_file_flag=0;
 
-// should be int gradfile_handle;
-//int gradient_structure::_GRADFILE_PTR = NULL;
-
-// should be int gradfile_handle;
-//int gradient_structure::_GRADFILE_PTR1 = NULL;
-
-// should be int gradfile_handle;
-//int gradient_structure::_GRADFILE_PTR2 = NULL;
-
-// should be int gradfile_handle;
-//int gradient_structure::_VARSSAV_PTR = 0;
-
-unsigned int gradient_structure::MAX_NVAR_OFFSET = 5000;
 unsigned long gradient_structure::ARRAY_MEMBLOCK_SIZE = 0L; //js
 dlist * gradient_structure::GRAD_LIST;
 grad_stack* gradient_structure::GRAD_STACK1;
-indvar_offset_list * gradient_structure::INDVAR_LIST = NULL;
 arr_list * gradient_structure::ARR_LIST1 = NULL;
 arr_list * gradient_structure::ARR_FREE_LIST1 = NULL;
 unsigned int gradient_structure::MAX_DLINKS = 5000;
@@ -443,42 +431,15 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
    cout << "GRAD_STACK1= "<< farptr_tolong(GRAD_STACK1)<<"\n";
 #endif
 
-   if (INDVAR_LIST!= NULL)
-   {
-      cerr <<
-        "Trying to allocate to a non NULL pointer in gradient structure \n";
+  {
+    int nopt=0;
+    int on=0;
+    if ( (on=option_match(ad_comm::argc,ad_comm::argv,"-mno",nopt))>-1)
+    {
+      cerr << "Error: Command line option \"-mno\" is no longer used.\n";
       ad_exit(1);
-   }
-   else
-   {
-     INDVAR_LIST = new indvar_offset_list;
-     memory_allocate_error("INDVAR_LIST",INDVAR_LIST);
- // ****************************************************************
- // ****************************************************************
-      int nopt=0;
-      int on=0;
-
-      if ( (on=option_match(ad_comm::argc,ad_comm::argv,"-mno",nopt))>-1)
-      {
-        if (nopt ==1)
-        {
-          const int i = atoi(ad_comm::argv[on+1]);
-          MAX_NVAR_OFFSET = static_cast<unsigned int>(i);
-        }
-        else
-        {
-          cerr << "Wrong number of options to -mno -- must be 1"
-            " you have " << nopt << endl;
-          ad_exit(1);
-        }
-      }
-
- // ****************************************************************
- // ****************************************************************
-
-     INDVAR_LIST->address = new double * [ (size_t) MAX_NVAR_OFFSET];
-     memory_allocate_error("INDVAR_LIST->address",INDVAR_LIST->address);
-   }
+    }
+  }
 
    //allocate_dvariable_space();
 
@@ -512,6 +473,8 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
   {
     RETURN_PTR_CONTAINER[i] = 0;
   }
+
+  _instance = this;
 }
 
 /**
@@ -601,17 +564,6 @@ gradient_structure::~gradient_structure()
      delete [] RETURN_PTR_CONTAINER;
      RETURN_PTR_CONTAINER = NULL;
   }
-  if (INDVAR_LIST == NULL)
-  {
-     null_ptr_err_message();
-     ad_exit(1);
-  }
-  else
-  {
-     delete [] INDVAR_LIST->address;
-     delete INDVAR_LIST;
-     INDVAR_LIST = NULL;
-  }
   if (GRAD_STACK1 == NULL)
   {
     null_ptr_err_message();
@@ -672,6 +624,8 @@ gradient_structure::~gradient_structure()
 
   delete fp;
   fp = NULL;
+
+  _instance = NULL;
 }
 
 /**

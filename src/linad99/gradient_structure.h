@@ -41,6 +41,7 @@
 #ifndef __ADMB_GRADIENT_STRUCTURE_H__
 #define __ADMB_GRADIENT_STRUCTURE_H__
 
+#include <vector>
 #include <fstream>
 using std::ofstream;
 
@@ -54,7 +55,6 @@ class arr_list;
 class dvar_vector;
 class dvar_vector_position;
 class prevariable;
-class indvar_offset_list;
 class dependent_variables_information;
 class grad_stack;
 class uostream;
@@ -86,17 +86,45 @@ public:
 };
 
 /**
+ * Description not yet available.
+ * \param
+ */
+class indvar_offset_list
+{
+  std::vector<double*> address;
+
+ public:
+  inline double *get_address(const unsigned int &i)
+  {
+    return i < address.size() ? address[i] : NULL;
+  }
+  void put_address(unsigned int &i, double *iaddress)
+  {
+    //  cerr << "In put_address i = " << i << "\n";
+    if (i < address.size())
+      address[i] = iaddress;
+    else
+      address.push_back(iaddress);
+  }
+};
+
+/**
  * class for things related to the gradient structures, including dimension of
  * arrays, size of buffers, etc.
  */
 class gradient_structure
 {
+  static gradient_structure* _instance;
+
    static char cmpdif_file_name[61];
    static DF_FILE *fp;
  public:
 #if defined(NO_DERIVS)
    static int no_derivatives;
 #endif
+
+  static gradient_structure* get() { return _instance; }
+
  private:
    static long int USE_FOR_HESSIAN;
    static long int NVAR;
@@ -122,12 +150,11 @@ class gradient_structure
    static size_t CMPDIF_BUFFER_SIZE;
    static size_t GRADSTACK_BUFFER_SIZE;
 #endif
-   static unsigned int MAX_NVAR_OFFSET;
    static int save_var_file_flag;
    static int save_var_flag;
 
    static unsigned int MAX_DLINKS;
-   static indvar_offset_list *INDVAR_LIST;
+indvar_offset_list INDVAR_LIST;
    static int NUM_DEPENDENT_VARIABLES;
    static dependent_variables_information *DEPVARS_INFO;
 
@@ -229,12 +256,14 @@ class gradient_structure
    static void set_GRADSTACK_BUFFER_SIZE(const size_t i);
    static void set_GRADSTACK_BUFFER_BYTES(const size_t i);
 #endif
-   static void set_MAX_NVAR_OFFSET(unsigned int i);
    static void set_MAX_DLINKS(int i);
    static size_t NUM_GRADSTACK_BYTES_WRITTEN(void);
    static unsigned int get_MAX_DLINKS() { return MAX_DLINKS; }
    static void save_dependent_variable_position(const prevariable & v1);
    static unsigned long int max_last_offset;
+
+   /// Deprecated
+   static void set_MAX_NVAR_OFFSET(unsigned int i);
 
    friend class dlist;
    friend class grad_stack;

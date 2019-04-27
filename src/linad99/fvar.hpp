@@ -875,8 +875,6 @@ public:
   friend void funnel_derivatives(void);
 };
 
-class indvar_offset_list;
-
 /**
   Holds derivative information for arithmetic operators and math library
   functions.
@@ -1261,29 +1259,6 @@ inline void grad_stack::set_gradient_stack(void (*func) (void))
    }
 #endif
 }
-
-/**
- * Description not yet available.
- * \param
- */
-class indvar_offset_list
-{
-   // The number of independent variables
-   int nvar;
-   double **address;
-
- public:
-   friend class gradient_structure;
-   inline double *get_address(const int &i)
-   {
-      return address[i];
-   }
-   void put_address(unsigned int &i, double *iaddress)
-   {
-      address[i] = iaddress;
-      //  cerr << "In put_address i = " << i << "\n";
-   }
-};
 
 void gradfree(dlink *);
 
