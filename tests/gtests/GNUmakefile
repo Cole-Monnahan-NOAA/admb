@@ -126,6 +126,7 @@ GTESTS_NEW=\
  main.cpp
 
 GTESTS_DEV=\
+ test_grad_list.cpp\
  test_indvar_offset_list.cpp\
  main.cpp
 
