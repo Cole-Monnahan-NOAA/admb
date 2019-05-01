@@ -137,7 +137,7 @@ void gradcalc(int nvar, const dvector& _g)
 
   gradient_structure::GRAD_STACK1->ptr--;
 
-  gradient_structure::GRAD_LIST->initialize();
+  gradient_structure::get()->GRAD_LIST->initialize();
 
   memset(gradient_structure::ARRAY_MEMBLOCK_BASE, 0,
     gradient_structure::ARR_LIST1->get_max_last_offset());
@@ -359,14 +359,14 @@ Save variables to a buffer.
 */
 void gradient_structure::save_variables()
 {
-  GRAD_LIST->save_variables();
+  get()->GRAD_LIST->save_variables();
 }
 /**
 Restore variables from buffer.
 */
 void gradient_structure::restore_variables()
 {
-  GRAD_LIST->restore_variables();
+  get()->GRAD_LIST->restore_variables();
 }
 /**
 Rewind buffer.

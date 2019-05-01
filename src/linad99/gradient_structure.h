@@ -89,8 +89,6 @@ public:
   friend void allocate_dvariable_space(void);
 };
 
-void gradfree(dlink *);
-
 /**
 Link list
 */
@@ -278,7 +276,6 @@ indvar_offset_list INDVAR_LIST;
    friend dmatrix restore_dvar_matrix_derivatives(void);
    friend dmatrix restore_dvar_matrix_value(void);
    //friend dmatrix restore_derivatives(void);
-   friend void gradfree(dlink * v);
    friend double_and_int *arr_new(unsigned int sz);//js
    friend void arr_free(double_and_int *);
    friend void RETURN_ARRAYS_DECREMENT(void);
@@ -293,7 +290,7 @@ indvar_offset_list INDVAR_LIST;
    friend dvar_vector_position restore_dvar_vector_position(void);
    static grad_stack *GRAD_STACK1;
    friend double_and_int *gradnew();
-   static dlist *GRAD_LIST;
+dlist* GRAD_LIST;
    static unsigned int RETURN_ARRAYS_SIZE;
    //static int RETURN_INDEX;
    static dvariable *RETURN_PTR;

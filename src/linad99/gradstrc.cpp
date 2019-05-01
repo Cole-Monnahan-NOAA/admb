@@ -105,7 +105,6 @@ int gradient_structure::save_var_flag=0;
 int gradient_structure::save_var_file_flag=0;
 
 unsigned long gradient_structure::ARRAY_MEMBLOCK_SIZE = 0L; //js
-dlist * gradient_structure::GRAD_LIST;
 grad_stack* gradient_structure::GRAD_STACK1;
 arr_list * gradient_structure::ARR_LIST1 = NULL;
 arr_list * gradient_structure::ARR_FREE_LIST1 = NULL;
@@ -249,8 +248,8 @@ void allocate_dvariable_space()
     tmp1+=2*sizeof(double);
     dl->prev=NULL;
     dlink * prev=dl;
-    int& nlinks=(int&)gradient_structure::GRAD_LIST->nlinks;
-    gradient_structure::GRAD_LIST->dlink_addresses[nlinks++]=dl;
+    int& nlinks=(int&)gradient_structure::get()->GRAD_LIST->nlinks;
+    gradient_structure::get()->GRAD_LIST->dlink_addresses[nlinks++]=dl;
     for (unsigned int i=1;i<=numlinks;i++)
     {
       dl=(dlink*)tmp1;
@@ -258,10 +257,10 @@ void allocate_dvariable_space()
       prev=dl;
       tmp1+=2*sizeof(double);
 
-      gradient_structure::GRAD_LIST->dlink_addresses[nlinks++]=dl;
+      gradient_structure::get()->GRAD_LIST->dlink_addresses[nlinks++]=dl;
       // keep track of the links so you can zero them out
     }
-    gradient_structure::GRAD_LIST->last=dl;
+    gradient_structure::get()->GRAD_LIST->last=dl;
   }
 }
 
@@ -363,11 +362,6 @@ gradient_structure::gradient_structure(long int _size):
   cerr <<"  ARRAY_MEMBLOCK_SIZE = " << ARRAY_MEMBLOCK_SIZE << "\n";
 #endif
 
-   if (GRAD_LIST!= NULL)
-   {
-     cerr << "Trying to allocate to a non NULL pointer in gradient structure\n";
-   }
-   else
    {
      GRAD_LIST = new dlist;
      memory_allocate_error("GRAD_LIST", (void *) GRAD_LIST);
@@ -441,7 +435,8 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
     }
   }
 
-   //allocate_dvariable_space();
+  //allocate_dvariable_space();
+  _instance = this;
 
   if ( RETURN_ARRAYS!= NULL)
   {
@@ -473,8 +468,6 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
   {
     RETURN_PTR_CONTAINER[i] = 0;
   }
-
-  _instance = this;
 }
 
 /**

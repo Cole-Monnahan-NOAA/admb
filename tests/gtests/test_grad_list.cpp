@@ -62,3 +62,29 @@ TEST_F(test_grad_list, grad_list)
   dlink* ret5 = gs.GRAD_LIST->last_remove();
   ASSERT_TRUE(ret5 == NULL);
 }
+TEST_F(test_grad_list, recycle)
+{
+  gradient_structure gs;
+  ASSERT_EQ(gs.GRAD_LIST->total_addresses(), 1750);
+
+  double_and_int* v = NULL;
+  {
+    dvariable d;
+    v = d.v;
+  }
+  ASSERT_EQ(gs.GRAD_LIST->total_addresses(), 1751);
+  ASSERT_TRUE(&v->x == gs.GRAD_LIST->get(1750));
+
+  double_and_int* v2 = NULL;
+  {
+    dvariable d;
+    v2 = d.v;
+    ASSERT_TRUE(v == v2);
+  }
+
+  ASSERT_EQ(gs.GRAD_LIST->total_addresses(), 1751);
+  ASSERT_TRUE(&v->x == gs.GRAD_LIST->get(1750));
+
+  dlink* ret = gs.GRAD_LIST->last_remove();
+  ASSERT_TRUE(v == ret->get_address());
+}

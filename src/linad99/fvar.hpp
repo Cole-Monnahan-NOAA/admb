@@ -1222,8 +1222,6 @@ public:
 
    friend double *address(const prevariable & v1);
 
-   //void gradfree(dlink * v)
-
    friend prevariable & operator*(const prevariable& v1, const prevariable& v2);
 
    friend prevariable & operator*(double v1, const prevariable & v2);

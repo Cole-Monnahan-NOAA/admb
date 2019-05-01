@@ -41,31 +41,26 @@ double_and_int* gradnew()
     ad_exit(1);
   }
 #endif
-  dlink* tmp = gradient_structure::GRAD_LIST->last_remove();
+  dlink* tmp = gradient_structure::get()->GRAD_LIST->last_remove();
   if (!tmp)
   {
-    tmp = gradient_structure::GRAD_LIST->create();
+    tmp = gradient_structure::get()->GRAD_LIST->create();
   }
   //  cout << "In gradnew the address of the double * ptr is "
   //       << _farptr_tolong(tmp) << "\n";
   return (double_and_int*)tmp;
 }
 /**
- * Description not yet available.
- * \param
+ * Recycle dlink* v for reuse.
  */
 void gradfree(dlink* v)
 {
-  if (gradient_structure::GRAD_LIST)
+  gradient_structure* gs = gradient_structure::get();
+  if (gs)
   {
-    if (gradient_structure::instances)
+    if (gs->GRAD_LIST)
     {
-      gradient_structure::GRAD_LIST->append(v);
-    }
-    else
-    {
-      delete (double_and_int*)v;
-      v = NULL;
+      gs->GRAD_LIST->append(v);
     }
   }
 }
@@ -124,7 +119,11 @@ dvariable::dvariable(kkludge_object)
   //(*v).nc=0;
 }
 /** Destructor; frees memory on gradient stack.  */
-dvariable::~dvariable() { gradfree((dlink*)v); }
+dvariable::~dvariable()
+{
+  gradfree((dlink*)v);
+  v = NULL;
+}
 /**
    Creates dvariable instance from a double constant.
    Creates new dvariable object,
