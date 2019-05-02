@@ -14,3 +14,4 @@ examples/admb/simple/*
 examples/admb/catage/*
 **/.DS_Store
 docs/api/dox
+tests/gtests/fmin.log
