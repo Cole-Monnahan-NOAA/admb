@@ -78,14 +78,7 @@ public:
     return &di;
   }
 
-  //friend tempvar();
-  //friend class prevariable;
-  //friend class tempvar;
   friend class dlist;
-  friend void gradcalc(int nvar, const dvector & g);
-  friend void slave_gradcalc(void);
-  friend void gradloop();
-  friend double_and_int *gradnew();
   friend void allocate_dvariable_space(void);
 };
 
@@ -121,21 +114,11 @@ public:
   double* get(const int i) const
     { return &(dlink_addresses[i]->get_address()->x); }
 
-  friend double_and_int *gradnew();
   friend void df_check_derivative_values(void);
   friend void df_check_derivative_values_indexed(void);
   friend void df_check_derivative_values_indexed_break(void);
   friend void funnel_gradcalc(void);
-  friend void slave_gradcalc(void);
-  friend void gradcalc(int nvar, const dvector& g);
-  friend void gradloop();
-  //friend void gradient_structure::restore_variables();
-  //friend void gradient_structure::save_variables();
-  //friend void gradient_structure::jacobcalc(int nvar, const dmatrix& jac);
   friend void allocate_dvariable_space(void);
-  //friend void gradient_structure::funnel_jacobcalc(void);
-  //friend void gradient_structure::jacobcalc(int nvar, const ofstream& jac);
-  //friend void gradient_structure::jacobcalc(int nvar, const uostream& jac);
   friend void funnel_derivatives(void);
 };
 
