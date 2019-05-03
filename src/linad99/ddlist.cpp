@@ -35,7 +35,6 @@ dlist::dlist()
 
   last = NULL;
   nlinks = 0;
-  dlink_addresses = new dlink*[gradient_structure::MAX_DLINKS];
   ddlist_space =
     (char*)malloc(gradient_structure::MAX_DLINKS * sizeof(dlink));
   variables_save = new double[gradient_structure::MAX_DLINKS];
@@ -44,20 +43,12 @@ dlist::dlist()
   //fails for insufficient memory to allocate space for dvariables save buffer
   assert(variables_save != NULL);
 #endif
-
-  //Initialize addresses to zero
-  memset(dlink_addresses, 0, sizeof(dlink*) * gradient_structure::MAX_DLINKS);
 }
 /**
 Destructor
 */
 dlist::~dlist()
 {
-  if (dlink_addresses)
-  {
-    delete [] dlink_addresses;
-    dlink_addresses = NULL;
-  }
   if (ddlist_space)
   {
     ::free(ddlist_space);
@@ -89,7 +80,7 @@ dlink* dlist::create()
   link->prev = NULL;
 
   //Keep track of the links so you can zero them out (ie gradcalc).
-  dlink_addresses[nlinks] = link;
+  dlink_addresses.push_back(link);
   ++nlinks;
 
   return link;
@@ -128,11 +119,9 @@ dlink* dlist::append(dlink* link)
 }
 void dlist::initialize()
 {
-  dlink** dest = dlink_addresses;
-  for (unsigned int i = 0; i < nlinks; ++i)
+  for (dlink* src: dlink_addresses)
   {
-    (*dest)->di.x = 0;
-    ++dest;
+    (*src).di.x = 0;
   }
 }
 /**
@@ -140,13 +129,11 @@ Save variables to a buffer.
 */
 void dlist::save_variables()
 {
-  dlink** src = dlink_addresses;
   double* dest = variables_save;
-  for (unsigned int i = 0; i < nlinks; ++i)
+  for (dlink* src: dlink_addresses)
   {
-    *dest = (*src)->di.x;
+    *dest = (*src).di.x;
     ++dest;
-    ++src;
   }
 }
 /**
@@ -154,12 +141,10 @@ Restore variables from buffer.
 */
 void dlist::restore_variables()
 {
-  dlink** dest = dlink_addresses;
   double* src = variables_save;
-  for (unsigned int i = 0; i < nlinks; ++i)
+  for (dlink* dest: dlink_addresses)
   {
-    (*dest)->di.x = *src;
-    ++dest;
+    (*dest).di.x = *src;
     ++src;
   }
 }
@@ -168,15 +153,7 @@ Get total addresses stored.
 */
 size_t dlist::total_addresses() const
 {
-  size_t total = 0;
-  for (unsigned int i = 0; i < gradient_structure::MAX_DLINKS; ++i)
-  {
-    if (dlink_addresses[i] != 0)
-    {
-      total++;
-    }
-  }
-  return total;
+  return dlink_addresses.size();
 }
 /**
 Check link list integrity.

@@ -89,7 +89,7 @@ class dlist
 {
   dlink* last;
   unsigned int nlinks;
-  dlink** dlink_addresses;
+  std::vector<dlink*> dlink_addresses;
   char* ddlist_space;
   double* variables_save;
 
