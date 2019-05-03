@@ -61,25 +61,10 @@ class uostream;
 /**
 Node in dlist
 */
-class dlink
+struct dlink
 {
   double_and_int di;
   dlink* prev;
-
-public:
-  dlink* previous() const
-  {
-    return prev;
-  }
-
-  //access function
-  inline double_and_int* get_address()
-  {
-    return &di;
-  }
-
-  friend class dlist;
-  friend void allocate_dvariable_space(void);
 };
 
 /**
@@ -112,7 +97,7 @@ public:
   size_t total_addresses() const;
 
   double* get(const int i) const
-    { return &(dlink_addresses[i]->get_address()->x); }
+    { return &(dlink_addresses[i]->di.x); }
 
   friend void df_check_derivative_values(void);
   friend void df_check_derivative_values_indexed(void);
