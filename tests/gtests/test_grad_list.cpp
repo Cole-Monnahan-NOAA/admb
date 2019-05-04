@@ -45,19 +45,19 @@ TEST_F(test_grad_list, grad_list)
   dlink* ret = gs.GRAD_LIST.append(n);
   ASSERT_TRUE(ret == n);
   ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
-  ASSERT_TRUE(ret->previous() == NULL);
+  ASSERT_TRUE(ret->prev == NULL);
   dlink* n2 = gs.GRAD_LIST.create();
   dlink* ret2 = gs.GRAD_LIST.append(n2);
   ASSERT_TRUE(ret2 == n2);
   ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1752);
-  ASSERT_TRUE(n2->previous() == n);
-  ASSERT_TRUE(n->previous() == NULL);
+  ASSERT_TRUE(n2->prev == n);
+  ASSERT_TRUE(n->prev == NULL);
   dlink* ret3 = gs.GRAD_LIST.last_remove();
   ASSERT_TRUE(ret3 == n2);
-  ASSERT_TRUE(ret3->previous() == NULL);
+  ASSERT_TRUE(ret3->prev == NULL);
   dlink* ret4 = gs.GRAD_LIST.last_remove();
   ASSERT_TRUE(ret4 == n);
-  ASSERT_TRUE(ret4->previous() == NULL);
+  ASSERT_TRUE(ret4->prev == NULL);
   dlink* ret5 = gs.GRAD_LIST.last_remove();
   ASSERT_TRUE(ret5 == NULL);
 }
@@ -85,5 +85,5 @@ TEST_F(test_grad_list, recycle)
   ASSERT_TRUE(&v->x == gs.GRAD_LIST.get(1750));
 
   dlink* ret = gs.GRAD_LIST.last_remove();
-  ASSERT_TRUE(v == ret->get_address());
+  ASSERT_TRUE(v == &(ret->di));
 }
