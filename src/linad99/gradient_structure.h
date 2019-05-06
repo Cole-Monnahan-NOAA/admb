@@ -72,11 +72,11 @@ Link list
 */
 class dlist
 {
-  dlink* last;
   unsigned int nlinks;
   std::vector<dlink*> dlink_addresses;
   char* ddlist_space;
   double* variables_save;
+  std::vector<dlink*> unused;
 
 public:
   // constructor
@@ -93,7 +93,7 @@ public:
   void restore_variables();
 
   // check list integrity
-  void check_list(void);
+  //void check_list(void);
   size_t total_addresses() const;
 
   double* get(const int i) const

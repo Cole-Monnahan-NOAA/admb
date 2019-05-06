@@ -50,7 +50,7 @@ TEST_F(test_grad_list, grad_list)
   dlink* ret2 = gs.GRAD_LIST.append(n2);
   ASSERT_TRUE(ret2 == n2);
   ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1752);
-  ASSERT_TRUE(n2->prev == n);
+  ASSERT_TRUE(n2->prev == NULL);
   ASSERT_TRUE(n->prev == NULL);
   dlink* ret3 = gs.GRAD_LIST.last_remove();
   ASSERT_TRUE(ret3 == n2);

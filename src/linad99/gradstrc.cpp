@@ -261,7 +261,7 @@ void allocate_dvariable_space()
       gs->GRAD_LIST.dlink_addresses[nlinks++]=dl;
       // keep track of the links so you can zero them out
     }
-    gs->GRAD_LIST.last=dl;
+    //gs->GRAD_LIST.last=dl;
   }
 }
 

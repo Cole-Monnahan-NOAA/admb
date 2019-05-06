@@ -33,7 +33,6 @@ dlist::dlist()
     }
   }
 
-  last = NULL;
   nlinks = 0;
   ddlist_space =
     (char*)malloc(gradient_structure::MAX_DLINKS * sizeof(dlink));
@@ -92,13 +91,13 @@ If list is not empty, pop and return last node.
 */
 dlink* dlist::last_remove()
 {
-  dlink* link = last;
-  if (link)
+  dlink* last = NULL;
+  if (unused.size() > 0)
   {
-    last = link->prev;
-    link->prev = NULL;
+    last = unused.back();
+    unused.pop_back();
   }
-  return link;
+  return last;
 }
 /**
 Append link to list.
@@ -107,15 +106,8 @@ Append link to list.
 */
 dlink* dlist::append(dlink* link)
 {
-#ifndef OPT_LIB
-  //Should fail if link is NULL.
-  assert(link);
-#endif
-
-  link->prev = last;
-  last = link;
-
-  return last;
+  unused.push_back(link);
+  return link;
 }
 void dlist::initialize()
 {
@@ -158,6 +150,7 @@ size_t dlist::total_addresses() const
 /**
 Check link list integrity.
 */
+/*
 void dlist::check_list(void)
 {
   dlink* tmp_last=last;
@@ -182,3 +175,4 @@ void dlist::check_list(void)
   }
   cerr << "In check_list() number of free links is " << count << endl;
 }
+*/
