@@ -34,8 +34,7 @@ dlist::dlist()
   }
 
   nlinks = 0;
-  ddlist_space =
-    (char*)malloc(gradient_structure::MAX_DLINKS * sizeof(dlink));
+  ddlist_space = (char*)malloc(gradient_structure::MAX_DLINKS * sizeof(double_and_int));
   variables_save = new double[gradient_structure::MAX_DLINKS];
 
 #ifndef OPT_LIB
@@ -62,21 +61,18 @@ dlist::~dlist()
 /**
 Return new unlinked node.
 */
-dlink* dlist::create()
+double_and_int* dlist::create()
 {
 #ifndef OPT_LIB
   //If fails, then need to increase the maximum number of dlinks.
   assert(nlinks < gradient_structure::MAX_DLINKS);
 #endif
 
-  dlink* link = (dlink*)(&ddlist_space[sizeof(dlink) * nlinks]);
+  double_and_int* link = (double_and_int*)(&ddlist_space[sizeof(double_and_int) * nlinks]);
 
 #ifndef OPT_LIB
   assert(link);
 #endif
-
-  //Do not add to list.
-  link->prev = NULL;
 
   //Keep track of the links so you can zero them out (ie gradcalc).
   dlink_addresses.push_back(link);
@@ -89,9 +85,9 @@ If list is not empty, pop and return last node.
 
 \return 0 empty list.
 */
-dlink* dlist::last_remove()
+double_and_int* dlist::last_remove()
 {
-  dlink* last = NULL;
+  double_and_int* last = NULL;
   if (unused.size() > 0)
   {
     last = unused.back();
@@ -104,16 +100,16 @@ Append link to list.
 
 \param link node
 */
-dlink* dlist::append(dlink* link)
+double_and_int* dlist::append(double_and_int* link)
 {
   unused.push_back(link);
   return link;
 }
 void dlist::initialize()
 {
-  for (dlink* src: dlink_addresses)
+  for (double_and_int* src: dlink_addresses)
   {
-    (*src).di.x = 0;
+    src->x = 0;
   }
 }
 /**
@@ -122,9 +118,9 @@ Save variables to a buffer.
 void dlist::save_variables()
 {
   double* dest = variables_save;
-  for (dlink* src: dlink_addresses)
+  for (double_and_int* src: dlink_addresses)
   {
-    *dest = (*src).di.x;
+    *dest = src->x;
     ++dest;
   }
 }
@@ -134,9 +130,9 @@ Restore variables from buffer.
 void dlist::restore_variables()
 {
   double* src = variables_save;
-  for (dlink* dest: dlink_addresses)
+  for (double_and_int* dest: dlink_addresses)
   {
-    (*dest).di.x = *src;
+    dest->x = *src;
     ++src;
   }
 }

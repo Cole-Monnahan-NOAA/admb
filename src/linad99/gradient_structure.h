@@ -59,24 +59,15 @@ class grad_stack;
 class uostream;
 
 /**
-Node in dlist
-*/
-struct dlink
-{
-  double_and_int di;
-  dlink* prev;
-};
-
-/**
 Link list
 */
 class dlist
 {
   unsigned int nlinks;
-  std::vector<dlink*> dlink_addresses;
+  std::vector<double_and_int*> dlink_addresses;
   char* ddlist_space;
   double* variables_save;
-  std::vector<dlink*> unused;
+  std::vector<double_and_int*> unused;
 
 public:
   // constructor
@@ -84,10 +75,10 @@ public:
   // destructor
   ~dlist();
   // create a new link
-  dlink* create();
+  double_and_int* create();
   // append link
-  dlink* append(dlink* link);
-  dlink* last_remove();
+  double_and_int* append(double_and_int* link);
+  double_and_int* last_remove();
   void initialize();
   void save_variables();
   void restore_variables();
@@ -97,7 +88,7 @@ public:
   size_t total_addresses() const;
 
   double* get(const int i) const
-    { return &(dlink_addresses[i]->di.x); }
+    { return &(dlink_addresses[i]->x); }
 
   friend void df_check_derivative_values(void);
   friend void df_check_derivative_values_indexed(void);

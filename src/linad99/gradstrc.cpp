@@ -202,6 +202,7 @@ void cleanup_temporary_files()
  * Description not yet available.
  * \param
  */
+/*
 void allocate_dvariable_space()
 {
   int on,nopt = 0;
@@ -261,9 +262,10 @@ void allocate_dvariable_space()
       gs->GRAD_LIST.dlink_addresses[nlinks++]=dl;
       // keep track of the links so you can zero them out
     }
-    //gs->GRAD_LIST.last=dl;
+    gs->GRAD_LIST.last=dl;
   }
 }
+*/
 
 /**
 Constructor
