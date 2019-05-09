@@ -1,13 +1,13 @@
 #default targets depending on compiler
 #DEBUG=yes
 
-all:
-	$(MAKE) $(CXX)-all DEBUG=$(DEBUG)
-	@echo ADMB build all completed.
-	@echo Check README.txt for usage and installation information.
 dist:
 	$(MAKE) $(CXX)-dist DEBUG=$(DEBUG)
 	@echo ADMB build dist completed.
+	@echo Check README.txt for usage and installation information.
+all:
+	$(MAKE) $(CXX)-all DEBUG=$(DEBUG)
+	@echo ADMB build all completed.
 	@echo Check README.txt for usage and installation information.
 src:
 	$(MAKE) $(CXX)-src DEBUG=$(DEBUG)
