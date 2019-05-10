@@ -261,7 +261,7 @@ do
     }
     save_int_value(ii);
 
-    unsigned int ssize=gradient_structure::get()->GRAD_LIST.nlinks;
+    unsigned int ssize=gradient_structure::get()->GRAD_LIST.get_nlinks();
 #ifndef OPT_LIB
     assert(ssize > 0);
     assert(ssize <= INT_MAX);
@@ -269,9 +269,9 @@ do
     dvector stmp(0,(int)(ssize-1));
 
 #ifndef OPT_LIB
-    assert(gradient_structure::get()->GRAD_LIST.nlinks <= INT_MAX);
+    assert(gradient_structure::get()->GRAD_LIST.get_nlinks() <= INT_MAX);
 #endif
-    for (int i=0; i < (int)gradient_structure::get()->GRAD_LIST.nlinks; i++)
+    for (int i=0; i < (int)gradient_structure::get()->GRAD_LIST.get_nlinks(); i++)
     {
       memcpy((char*)&(stmp(i)),
         gradient_structure::get()->GRAD_LIST.get(i),sizeof(double));

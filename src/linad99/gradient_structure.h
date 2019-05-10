@@ -76,7 +76,7 @@ public:
   // create a new link
   double_and_int* create();
   // append link
-  double_and_int* append(double_and_int* link);
+  double_and_int* append(double_and_int*);
   double_and_int* last_remove();
   void initialize();
   void save_variables();
@@ -85,15 +85,9 @@ public:
   // check list integrity
   //void check_list(void);
   size_t total_addresses() const;
+  unsigned int get_nlinks() const { return nlinks; }
 
   double* get(const int i) const;
-
-  friend void df_check_derivative_values(void);
-  friend void df_check_derivative_values_indexed(void);
-  friend void df_check_derivative_values_indexed_break(void);
-  friend void funnel_gradcalc(void);
-  friend void allocate_dvariable_space(void);
-  friend void funnel_derivatives(void);
 };
 
 /**
