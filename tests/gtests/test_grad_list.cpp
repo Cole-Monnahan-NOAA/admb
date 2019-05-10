@@ -43,6 +43,7 @@ TEST_F(test_grad_list, grad_list)
   double_and_int* n = gs.GRAD_LIST.create();
   ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
   double_and_int* ret = gs.GRAD_LIST.append(n);
+  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
   ASSERT_TRUE(ret == n);
   ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
   double_and_int* n2 = gs.GRAD_LIST.create();
@@ -51,10 +52,10 @@ TEST_F(test_grad_list, grad_list)
   ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
   double_and_int* ret3 = gs.GRAD_LIST.last_remove();
   ASSERT_TRUE(ret3 == n2);
+  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
   double_and_int* ret4 = gs.GRAD_LIST.last_remove();
-  ASSERT_TRUE(ret4 == n);
-  double_and_int* ret5 = gs.GRAD_LIST.last_remove();
-  ASSERT_TRUE(ret5 == NULL);
+  ASSERT_TRUE(ret4 == NULL);
+  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
 }
 TEST_F(test_grad_list, recycle)
 {

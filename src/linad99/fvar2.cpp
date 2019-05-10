@@ -32,8 +32,9 @@
  */
 double_and_int* gradnew()
 {
+  gradient_structure* gs = gradient_structure::get();
 #if !defined(OPT_LIB)
-  if (!gradient_structure::instances)
+  if (!gs)
   {
     cerr << "Error -- you are trying to create a dvariable object"
             " when there is " << endl << "no object of type"
@@ -41,14 +42,9 @@ double_and_int* gradnew()
     ad_exit(1);
   }
 #endif
-  double_and_int* tmp = gradient_structure::get()->GRAD_LIST.last_remove();
-  if (!tmp)
-  {
-    tmp = gradient_structure::get()->GRAD_LIST.create();
-  }
   //  cout << "In gradnew the address of the double * ptr is "
   //       << _farptr_tolong(tmp) << "\n";
-  return tmp;
+  return gs->GRAD_LIST.create();
 }
 /**
  * Recycle dlink* v for reuse.

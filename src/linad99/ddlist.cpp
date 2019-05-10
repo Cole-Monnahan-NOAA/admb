@@ -63,20 +63,24 @@ Return new unlinked node.
 */
 double_and_int* dlist::create()
 {
+  double_and_int* link = last_remove();
+  if (link == NULL)
+  {
 #ifndef OPT_LIB
-  //If fails, then need to increase the maximum number of dlinks.
-  assert(nlinks < gradient_structure::MAX_DLINKS);
+    //If fails, then need to increase the maximum number of dlinks.
+    assert(nlinks < gradient_structure::MAX_DLINKS);
 #endif
 
-  double_and_int* link = (double_and_int*)(&ddlist_space[sizeof(double_and_int) * nlinks]);
+    link = (double_and_int*)(&ddlist_space[sizeof(double_and_int) * nlinks]);
 
 #ifndef OPT_LIB
-  assert(link);
+    assert(link);
 #endif
 
-  //Keep track of the links so you can zero them out (ie gradcalc).
-  dlink_addresses.push_back(link);
-  ++nlinks;
+    //Keep track of the links so you can zero them out (ie gradcalc).
+    dlink_addresses.push_back(link);
+    ++nlinks;
+  }
 
   return link;
 }
