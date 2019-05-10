@@ -133,13 +133,6 @@ void dlist::restore_variables()
   memcpy(ddlist_space, variables_save, sizeof(double_and_int) * nlinks);
 }
 /**
-Get total addresses stored.
-*/
-size_t dlist::total_addresses() const
-{
-  return nlinks - unused.size();
-}
-/**
 Check link list integrity.
 */
 /*

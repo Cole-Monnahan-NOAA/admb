@@ -84,8 +84,7 @@ public:
 
   // check list integrity
   //void check_list(void);
-  size_t total_addresses() const;
-  unsigned int get_nlinks() const { return nlinks; }
+  unsigned int size() const { return nlinks; }
 
   double* get(const int i) const;
 };

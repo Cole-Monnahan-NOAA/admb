@@ -401,7 +401,7 @@ void df_check_derivative_values(void)
   }
 
   icount=0;
-  for (i=0; i<gradient_structure::get()->GRAD_LIST.get_nlinks(); i++)
+  for (i=0; i<gradient_structure::get()->GRAD_LIST.size(); i++)
   {
     if (*(gradient_structure::get()->GRAD_LIST.get(i)) > 1.e+8)
     {
@@ -462,7 +462,7 @@ void df_check_derivative_values_indexed(void)
   }
 
   icount=0;
-  for (i=0; i<gradient_structure::get()->GRAD_LIST.get_nlinks(); i++)
+  for (i=0; i<gradient_structure::get()->GRAD_LIST.size(); i++)
   {
     if (*(gradient_structure::get()->GRAD_LIST.get(i)) > 1.e+8)
     {
@@ -515,7 +515,7 @@ void df_check_derivative_values_indexed_break(void)
   }
 
   icount=0;
-  for (i=0; i<gradient_structure::get()->GRAD_LIST.get_nlinks(); i++)
+  for (i=0; i<gradient_structure::get()->GRAD_LIST.size(); i++)
   {
     if (*(gradient_structure::get()->GRAD_LIST.get(i)) > 1.e+8)
     {

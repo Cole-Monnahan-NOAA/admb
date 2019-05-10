@@ -20,7 +20,7 @@ TEST_F(test_grad_list, gradient_structure_instance)
 TEST_F(test_grad_list, grad_list)
 {
   gradient_structure gs;
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1750);
   ASSERT_TRUE(gs.GRAD_LIST.last_remove() == NULL);
   for (int i = 0; i < 1750; ++i)
   {
@@ -41,33 +41,33 @@ TEST_F(test_grad_list, grad_list)
     ASSERT_EQ(*ptr, i);
   }
   double_and_int* n = gs.GRAD_LIST.create();
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   double_and_int* ret = gs.GRAD_LIST.append(n);
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   ASSERT_TRUE(ret == n);
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   double_and_int* n2 = gs.GRAD_LIST.create();
   double_and_int* ret2 = gs.GRAD_LIST.append(n2);
   ASSERT_TRUE(ret2 == n2);
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   double_and_int* ret3 = gs.GRAD_LIST.last_remove();
   ASSERT_TRUE(ret3 == n2);
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   double_and_int* ret4 = gs.GRAD_LIST.last_remove();
   ASSERT_TRUE(ret4 == NULL);
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
 }
 TEST_F(test_grad_list, recycle)
 {
   gradient_structure gs;
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1750);
 
   double_and_int* v = NULL;
   {
     dvariable d;
     v = d.v;
   }
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   ASSERT_TRUE(&v->x == gs.GRAD_LIST.get(1750));
 
   double_and_int* v2 = NULL;
@@ -77,7 +77,7 @@ TEST_F(test_grad_list, recycle)
     ASSERT_TRUE(v == v2);
   }
 
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   ASSERT_TRUE(&v->x == gs.GRAD_LIST.get(1750));
 
   double_and_int* ret = gs.GRAD_LIST.last_remove();
