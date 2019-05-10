@@ -27,10 +27,6 @@
 #include <math.h>
 
 
-//extern prevariable * FRETURN;
-//extern int RETURN_INDEX;
-//extern dlist * GRAD_LIST; //js
-
 void shape_check(const dvar_vector& v1, const dvar_vector& v2,
   const char *function_name);
 void shape_check(const dvector& v1, const dvar_vector& v2,
