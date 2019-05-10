@@ -98,10 +98,9 @@ double_and_int* dlist::last_remove()
   }
   return last;
 }
-double* dlist::get(const int i) const
+double_and_int* dlist::get(const int i) const
 {
-  double_and_int* ret = (double_and_int*)(&ddlist_space[sizeof(double_and_int) * i]);
-  return &(ret->x);
+  return (double_and_int*)(&ddlist_space[sizeof(double_and_int) * i]);
 }
 
 /**

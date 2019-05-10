@@ -353,8 +353,7 @@ void funnel_derivatives(void)
   {
     if (!ISZERO(stmp(i)))
     {
-      *(gradient_structure::get()->GRAD_LIST.get(i))
-        +=stmp(i)*df;
+      gradient_structure::get()->GRAD_LIST.get(i)->x +=stmp(i)*df;
     }
   }
 }

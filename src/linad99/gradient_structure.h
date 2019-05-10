@@ -86,7 +86,7 @@ public:
   //void check_list(void);
   unsigned int size() const { return nlinks; }
 
-  double* get(const int i) const;
+  double_and_int* get(const int i) const;
 };
 
 /**
