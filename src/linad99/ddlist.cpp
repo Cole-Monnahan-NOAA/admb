@@ -141,7 +141,7 @@ Get total addresses stored.
 */
 size_t dlist::total_addresses() const
 {
-  return dlink_addresses.size();
+  return nlinks - unused.size();
 }
 /**
 Check link list integrity.
