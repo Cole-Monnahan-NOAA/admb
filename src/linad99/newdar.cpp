@@ -403,12 +403,11 @@ void df_check_derivative_values(void)
   icount=0;
   for (i=0; i<gradient_structure::get()->GRAD_LIST.nlinks; i++)
   {
-    if (* (double*) (gradient_structure::get()->GRAD_LIST.dlink_addresses[i])
-      > 1.e+8)
+    if (*(gradient_structure::get()->GRAD_LIST.get(i)) > 1.e+8)
     {
       icount++;
        cout << "dlist " << i << " " << setscientific() <<
-         * (double*) (gradient_structure::get()->GRAD_LIST.dlink_addresses[i])
+         *(gradient_structure::get()->GRAD_LIST.get(i))
           << endl;
       if (icount>10)
       {
@@ -465,13 +464,12 @@ void df_check_derivative_values_indexed(void)
   icount=0;
   for (i=0; i<gradient_structure::get()->GRAD_LIST.nlinks; i++)
   {
-    if (* (double*) (gradient_structure::get()->GRAD_LIST.dlink_addresses[i])
-      > 1.e+8)
+    if (*(gradient_structure::get()->GRAD_LIST.get(i)) > 1.e+8)
     {
       icount++;
       if (ad_kill_flag) exit_flag=1;
        cout << "dlist " << i << " " << setscientific() <<
-         * (double*) (gradient_structure::get()->GRAD_LIST.dlink_addresses[i])
+         *(gradient_structure::get()->GRAD_LIST.get(i))
           << endl;
       if (icount>10)
       {
@@ -519,13 +517,12 @@ void df_check_derivative_values_indexed_break(void)
   icount=0;
   for (i=0; i<gradient_structure::get()->GRAD_LIST.nlinks; i++)
   {
-    if (* (double*) (gradient_structure::get()->GRAD_LIST.dlink_addresses[i])
-      > 1.e+8)
+    if (*(gradient_structure::get()->GRAD_LIST.get(i)) > 1.e+8)
     {
       icount++;
       if (ad_kill_flag) exit_flag=1;
        cout << "dlist " << i << " " <<
-         * (double*) (gradient_structure::get()->GRAD_LIST.dlink_addresses[i])
+         *(gradient_structure::get()->GRAD_LIST.get(i))
           << endl;
       if (icount>10)
       {

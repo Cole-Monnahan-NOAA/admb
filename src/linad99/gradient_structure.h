@@ -64,7 +64,6 @@ Link list
 class dlist
 {
   unsigned int nlinks;
-  std::vector<double_and_int*> dlink_addresses;
   char* ddlist_space;
   double* variables_save;
   std::vector<double_and_int*> unused;
@@ -87,8 +86,7 @@ public:
   //void check_list(void);
   size_t total_addresses() const;
 
-  double* get(const int i) const
-    { return &(dlink_addresses[i]->x); }
+  double* get(const int i) const;
 
   friend void df_check_derivative_values(void);
   friend void df_check_derivative_values_indexed(void);

@@ -78,7 +78,6 @@ double_and_int* dlist::create()
 #endif
 
     //Keep track of the links so you can zero them out (ie gradcalc).
-    dlink_addresses.push_back(link);
     ++nlinks;
   }
 
@@ -99,6 +98,12 @@ double_and_int* dlist::last_remove()
   }
   return last;
 }
+double* dlist::get(const int i) const
+{
+  double_and_int* ret = (double_and_int*)(&ddlist_space[sizeof(double_and_int) * i]);
+  return &(ret->x);
+}
+
 /**
 Append link to list.
 
@@ -111,34 +116,21 @@ double_and_int* dlist::append(double_and_int* link)
 }
 void dlist::initialize()
 {
-  for (double_and_int* src: dlink_addresses)
-  {
-    src->x = 0;
-  }
+  memset(ddlist_space, 0, sizeof(double_and_int) * nlinks);
 }
 /**
 Save variables to a buffer.
 */
 void dlist::save_variables()
 {
-  double* dest = variables_save;
-  for (double_and_int* src: dlink_addresses)
-  {
-    *dest = src->x;
-    ++dest;
-  }
+  memcpy(variables_save, ddlist_space, sizeof(double_and_int) * nlinks);
 }
 /**
 Restore variables from buffer.
 */
 void dlist::restore_variables()
 {
-  double* src = variables_save;
-  for (double_and_int* dest: dlink_addresses)
-  {
-    dest->x = *src;
-    ++src;
-  }
+  memcpy(ddlist_space, variables_save, sizeof(double_and_int) * nlinks);
 }
 /**
 Get total addresses stored.

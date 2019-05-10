@@ -274,7 +274,7 @@ do
     for (int i=0; i < (int)gradient_structure::get()->GRAD_LIST.nlinks; i++)
     {
       memcpy((char*)&(stmp(i)),
-        gradient_structure::get()->GRAD_LIST.dlink_addresses[i],sizeof(double));
+        gradient_structure::get()->GRAD_LIST.get(i),sizeof(double));
     }
     //dtmp.save_dvector_value();
     //dtmp.save_dvector_position();
@@ -353,7 +353,7 @@ void funnel_derivatives(void)
   {
     if (!ISZERO(stmp(i)))
     {
-      *(double*)(gradient_structure::get()->GRAD_LIST.dlink_addresses[i])
+      *(gradient_structure::get()->GRAD_LIST.get(i))
         +=stmp(i)*df;
     }
   }
