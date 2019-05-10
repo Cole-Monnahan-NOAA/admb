@@ -82,8 +82,6 @@ public:
   void save_variables();
   void restore_variables();
 
-  // check list integrity
-  //void check_list(void);
   unsigned int size() const { return nlinks; }
 
   double_and_int* get(const int i) const;

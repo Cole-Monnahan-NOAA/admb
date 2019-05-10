@@ -131,32 +131,3 @@ void dlist::restore_variables()
 {
   memcpy(ddlist_space, variables_save, sizeof(double_and_int) * nlinks);
 }
-/**
-Check link list integrity.
-*/
-/*
-void dlist::check_list(void)
-{
-  dlink* tmp_last=last;
-
-  unsigned int count=0;
-  while(tmp_last && count <=nlinks)
-  {
-    count+=1;
-    if (count > nlinks)
-    {
-      cerr << "In check_list() number of links > number created\n";
-      cerr << " The number created was "<< nlinks << endl;
-    }
-
-    dlink* tmp = tmp_last->prev;
-
-//  cout << "last =" << _farptr_tolong(last) << "\n";
-//  cout << "last->prev =" << _farptr_tolong(last->prev) << "\n";
-//  cout << "deleted dlink with address" << _farptr_tolong(last) << "\n";
-
-    tmp_last = tmp;
-  }
-  cerr << "In check_list() number of free links is " << count << endl;
-}
-*/
