@@ -76,8 +76,8 @@ public:
   // create a new link
   double_and_int* create();
   // append link
-  double_and_int* append(double_and_int*);
-  double_and_int* last_remove();
+  double_and_int* add_unused(double_and_int*);
+  double_and_int* get_unused();
   void initialize();
   void save_variables();
   void restore_variables();

@@ -63,40 +63,40 @@ Return new unlinked node.
 */
 double_and_int* dlist::create()
 {
-  double_and_int* link = last_remove();
-  if (link == NULL)
+  double_and_int* ptr = get_unused();
+  if (ptr == NULL)
   {
 #ifndef OPT_LIB
     //If fails, then need to increase the maximum number of dlinks.
     assert(nlinks < gradient_structure::MAX_DLINKS);
 #endif
 
-    link = (double_and_int*)(&ddlist_space[sizeof(double_and_int) * nlinks]);
-
-#ifndef OPT_LIB
-    assert(link);
-#endif
+    ptr = get(nlinks);
 
     //Keep track of the links so you can zero them out (ie gradcalc).
     ++nlinks;
   }
 
-  return link;
+#ifndef OPT_LIB
+    assert(ptr);
+#endif
+
+  return ptr;
 }
 /**
 If list is not empty, pop and return last node.
 
 \return 0 empty list.
 */
-double_and_int* dlist::last_remove()
+double_and_int* dlist::get_unused()
 {
-  double_and_int* last = NULL;
+  double_and_int* ptr = NULL;
   if (unused.size() > 0)
   {
-    last = unused.back();
+    ptr = unused.back();
     unused.pop_back();
   }
-  return last;
+  return ptr;
 }
 double_and_int* dlist::get(const int i) const
 {
@@ -108,10 +108,10 @@ Append link to list.
 
 \param link node
 */
-double_and_int* dlist::append(double_and_int* link)
+double_and_int* dlist::add_unused(double_and_int* ptr)
 {
-  unused.push_back(link);
-  return link;
+  unused.push_back(ptr);
+  return ptr;
 }
 void dlist::initialize()
 {

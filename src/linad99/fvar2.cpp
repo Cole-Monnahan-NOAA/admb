@@ -54,7 +54,7 @@ void gradfree(double_and_int* v)
   gradient_structure* gs = gradient_structure::get();
   if (gs)
   {
-    gs->GRAD_LIST.append(v);
+    gs->GRAD_LIST.add_unused(v);
   }
 }
 //prevariable::prevariable(const prevariable& t)
