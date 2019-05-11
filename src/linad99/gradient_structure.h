@@ -59,46 +59,14 @@ class grad_stack;
 class uostream;
 
 /**
-Node in dlist
-*/
-class dlink
-{
-  double_and_int di;
-  dlink* prev;
-
-public:
-  dlink* previous() const
-  {
-    return prev;
-  }
-
-  //access function
-  inline double_and_int* get_address()
-  {
-    return &di;
-  }
-
-  //friend tempvar();
-  //friend class prevariable;
-  //friend class tempvar;
-  friend class dlist;
-  friend void gradcalc(int nvar, const dvector & g);
-  friend void slave_gradcalc(void);
-  friend void gradloop();
-  friend double_and_int *gradnew();
-  friend void allocate_dvariable_space(void);
-};
-
-/**
 Link list
 */
 class dlist
 {
-  dlink* last;
   unsigned int nlinks;
-  dlink** dlink_addresses;
   char* ddlist_space;
   double* variables_save;
+  std::vector<double_and_int*> unused;
 
 public:
   // constructor
@@ -106,37 +74,17 @@ public:
   // destructor
   ~dlist();
   // create a new link
-  dlink* create();
+  double_and_int* create();
   // append link
-  dlink* append(dlink* link);
-  dlink* last_remove();
+  double_and_int* add_unused(double_and_int*);
+  double_and_int* get_unused();
   void initialize();
   void save_variables();
   void restore_variables();
 
-  // check list integrity
-  void check_list(void);
-  size_t total_addresses() const;
+  unsigned int size() const { return nlinks; }
 
-  double* get(const int i) const
-    { return &(dlink_addresses[i]->get_address()->x); }
-
-  friend double_and_int *gradnew();
-  friend void df_check_derivative_values(void);
-  friend void df_check_derivative_values_indexed(void);
-  friend void df_check_derivative_values_indexed_break(void);
-  friend void funnel_gradcalc(void);
-  friend void slave_gradcalc(void);
-  friend void gradcalc(int nvar, const dvector& g);
-  friend void gradloop();
-  //friend void gradient_structure::restore_variables();
-  //friend void gradient_structure::save_variables();
-  //friend void gradient_structure::jacobcalc(int nvar, const dmatrix& jac);
-  friend void allocate_dvariable_space(void);
-  //friend void gradient_structure::funnel_jacobcalc(void);
-  //friend void gradient_structure::jacobcalc(int nvar, const ofstream& jac);
-  //friend void gradient_structure::jacobcalc(int nvar, const uostream& jac);
-  friend void funnel_derivatives(void);
+  double_and_int* get(const int i) const;
 };
 
 /**

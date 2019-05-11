@@ -32,8 +32,9 @@
  */
 double_and_int* gradnew()
 {
+  gradient_structure* gs = gradient_structure::get();
 #if !defined(OPT_LIB)
-  if (!gradient_structure::instances)
+  if (!gs)
   {
     cerr << "Error -- you are trying to create a dvariable object"
             " when there is " << endl << "no object of type"
@@ -41,24 +42,19 @@ double_and_int* gradnew()
     ad_exit(1);
   }
 #endif
-  dlink* tmp = gradient_structure::get()->GRAD_LIST.last_remove();
-  if (!tmp)
-  {
-    tmp = gradient_structure::get()->GRAD_LIST.create();
-  }
   //  cout << "In gradnew the address of the double * ptr is "
   //       << _farptr_tolong(tmp) << "\n";
-  return (double_and_int*)tmp;
+  return gs->GRAD_LIST.create();
 }
 /**
  * Recycle dlink* v for reuse.
  */
-void gradfree(dlink* v)
+void gradfree(double_and_int* v)
 {
   gradient_structure* gs = gradient_structure::get();
   if (gs)
   {
-    gs->GRAD_LIST.append(v);
+    gs->GRAD_LIST.add_unused(v);
   }
 }
 //prevariable::prevariable(const prevariable& t)
@@ -118,7 +114,7 @@ dvariable::dvariable(kkludge_object)
 /** Destructor; frees memory on gradient stack.  */
 dvariable::~dvariable()
 {
-  gradfree((dlink*)v);
+  gradfree(v);
   v = NULL;
 }
 /**

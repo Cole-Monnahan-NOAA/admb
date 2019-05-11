@@ -33,31 +33,20 @@ dlist::dlist()
     }
   }
 
-  last = NULL;
   nlinks = 0;
-  dlink_addresses = new dlink*[gradient_structure::MAX_DLINKS];
-  ddlist_space =
-    (char*)malloc(gradient_structure::MAX_DLINKS * sizeof(dlink));
+  ddlist_space = (char*)malloc(gradient_structure::MAX_DLINKS * sizeof(double_and_int));
   variables_save = new double[gradient_structure::MAX_DLINKS];
 
 #ifndef OPT_LIB
   //fails for insufficient memory to allocate space for dvariables save buffer
   assert(variables_save != NULL);
 #endif
-
-  //Initialize addresses to zero
-  memset(dlink_addresses, 0, sizeof(dlink*) * gradient_structure::MAX_DLINKS);
 }
 /**
 Destructor
 */
 dlist::~dlist()
 {
-  if (dlink_addresses)
-  {
-    delete [] dlink_addresses;
-    dlink_addresses = NULL;
-  }
   if (ddlist_space)
   {
     ::free(ddlist_space);
@@ -72,136 +61,73 @@ dlist::~dlist()
 /**
 Return new unlinked node.
 */
-dlink* dlist::create()
+double_and_int* dlist::create()
 {
+  double_and_int* ptr = get_unused();
+  if (ptr == NULL)
+  {
 #ifndef OPT_LIB
-  //If fails, then need to increase the maximum number of dlinks.
-  assert(nlinks < gradient_structure::MAX_DLINKS);
+    //If fails, then need to increase the maximum number of dlinks.
+    assert(nlinks < gradient_structure::MAX_DLINKS);
 #endif
 
-  dlink* link = (dlink*)(&ddlist_space[sizeof(dlink) * nlinks]);
+    ptr = get(nlinks);
+
+    //Keep track of the links so you can zero them out (ie gradcalc).
+    ++nlinks;
+  }
 
 #ifndef OPT_LIB
-  assert(link);
+    assert(ptr);
 #endif
 
-  //Do not add to list.
-  link->prev = NULL;
-
-  //Keep track of the links so you can zero them out (ie gradcalc).
-  dlink_addresses[nlinks] = link;
-  ++nlinks;
-
-  return link;
+  return ptr;
 }
 /**
 If list is not empty, pop and return last node.
 
 \return 0 empty list.
 */
-dlink* dlist::last_remove()
+double_and_int* dlist::get_unused()
 {
-  dlink* link = last;
-  if (link)
+  double_and_int* ptr = NULL;
+  if (unused.size() > 0)
   {
-    last = link->prev;
-    link->prev = NULL;
+    ptr = unused.back();
+    unused.pop_back();
   }
-  return link;
+  return ptr;
 }
+double_and_int* dlist::get(const int i) const
+{
+  return (double_and_int*)(&ddlist_space[sizeof(double_and_int) * i]);
+}
+
 /**
 Append link to list.
 
 \param link node
 */
-dlink* dlist::append(dlink* link)
+double_and_int* dlist::add_unused(double_and_int* ptr)
 {
-#ifndef OPT_LIB
-  //Should fail if link is NULL.
-  assert(link);
-#endif
-
-  link->prev = last;
-  last = link;
-
-  return last;
+  unused.push_back(ptr);
+  return ptr;
 }
 void dlist::initialize()
 {
-  dlink** dest = dlink_addresses;
-  for (unsigned int i = 0; i < nlinks; ++i)
-  {
-    (*dest)->di.x = 0;
-    ++dest;
-  }
+  memset(ddlist_space, 0, sizeof(double_and_int) * nlinks);
 }
 /**
 Save variables to a buffer.
 */
 void dlist::save_variables()
 {
-  dlink** src = dlink_addresses;
-  double* dest = variables_save;
-  for (unsigned int i = 0; i < nlinks; ++i)
-  {
-    *dest = (*src)->di.x;
-    ++dest;
-    ++src;
-  }
+  memcpy(variables_save, ddlist_space, sizeof(double_and_int) * nlinks);
 }
 /**
 Restore variables from buffer.
 */
 void dlist::restore_variables()
 {
-  dlink** dest = dlink_addresses;
-  double* src = variables_save;
-  for (unsigned int i = 0; i < nlinks; ++i)
-  {
-    (*dest)->di.x = *src;
-    ++dest;
-    ++src;
-  }
-}
-/**
-Get total addresses stored.
-*/
-size_t dlist::total_addresses() const
-{
-  size_t total = 0;
-  for (unsigned int i = 0; i < gradient_structure::MAX_DLINKS; ++i)
-  {
-    if (dlink_addresses[i] != 0)
-    {
-      total++;
-    }
-  }
-  return total;
-}
-/**
-Check link list integrity.
-*/
-void dlist::check_list(void)
-{
-  dlink* tmp_last=last;
-
-  unsigned int count=0;
-  while(tmp_last && count <=nlinks)
-  {
-    count+=1;
-    if (count > nlinks)
-    {
-      cerr << "In check_list() number of links > number created\n";
-      cerr << " The number created was "<< nlinks << endl;
-    }
-
-    dlink* tmp = tmp_last->prev;
-
-//  cout << "last =" << _farptr_tolong(last) << "\n";
-//  cout << "last->prev =" << _farptr_tolong(last->prev) << "\n";
-//  cout << "deleted dlink with address" << _farptr_tolong(last) << "\n";
-
-    tmp_last = tmp;
-  }
-  cerr << "In check_list() number of free links is " << count << endl;
+  memcpy(ddlist_space, variables_save, sizeof(double_and_int) * nlinks);
 }

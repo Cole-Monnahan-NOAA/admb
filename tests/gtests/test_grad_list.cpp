@@ -20,59 +20,54 @@ TEST_F(test_grad_list, gradient_structure_instance)
 TEST_F(test_grad_list, grad_list)
 {
   gradient_structure gs;
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
-  ASSERT_TRUE(gs.GRAD_LIST.last_remove() == NULL);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1750);
+  ASSERT_TRUE(gs.GRAD_LIST.get_unused() == NULL);
   for (int i = 0; i < 1750; ++i)
   {
-    double* ptr = gs.GRAD_LIST.get(i);
-    *ptr = i;
+    gs.GRAD_LIST.get(i)->x = i;
   }
   gs.GRAD_LIST.save_variables();
   gs.GRAD_LIST.initialize();
   for (int i = 0; i < 1750; ++i)
   {
-    double* ptr = gs.GRAD_LIST.get(i);
-    ASSERT_EQ(*ptr, 0);
+    double_and_int* ptr = gs.GRAD_LIST.get(i);
+    ASSERT_EQ(ptr->x, 0);
   }
   gs.GRAD_LIST.restore_variables();
   for (int i = 0; i < 1750; ++i)
   {
-    double* ptr = gs.GRAD_LIST.get(i);
-    ASSERT_EQ(*ptr, i);
+    double_and_int* ptr = gs.GRAD_LIST.get(i);
+    ASSERT_EQ(ptr->x, i);
   }
-  dlink* n = gs.GRAD_LIST.create();
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
-  dlink* ret = gs.GRAD_LIST.append(n);
+  double_and_int* n = gs.GRAD_LIST.create();
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
+  double_and_int* ret = gs.GRAD_LIST.add_unused(n);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
   ASSERT_TRUE(ret == n);
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
-  ASSERT_TRUE(ret->previous() == NULL);
-  dlink* n2 = gs.GRAD_LIST.create();
-  dlink* ret2 = gs.GRAD_LIST.append(n2);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
+  double_and_int* n2 = gs.GRAD_LIST.create();
+  double_and_int* ret2 = gs.GRAD_LIST.add_unused(n2);
   ASSERT_TRUE(ret2 == n2);
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1752);
-  ASSERT_TRUE(n2->previous() == n);
-  ASSERT_TRUE(n->previous() == NULL);
-  dlink* ret3 = gs.GRAD_LIST.last_remove();
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
+  double_and_int* ret3 = gs.GRAD_LIST.get_unused();
   ASSERT_TRUE(ret3 == n2);
-  ASSERT_TRUE(ret3->previous() == NULL);
-  dlink* ret4 = gs.GRAD_LIST.last_remove();
-  ASSERT_TRUE(ret4 == n);
-  ASSERT_TRUE(ret4->previous() == NULL);
-  dlink* ret5 = gs.GRAD_LIST.last_remove();
-  ASSERT_TRUE(ret5 == NULL);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
+  double_and_int* ret4 = gs.GRAD_LIST.get_unused();
+  ASSERT_TRUE(ret4 == NULL);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
 }
 TEST_F(test_grad_list, recycle)
 {
   gradient_structure gs;
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1750);
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1750);
 
   double_and_int* v = NULL;
   {
     dvariable d;
     v = d.v;
   }
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
-  ASSERT_TRUE(&v->x == gs.GRAD_LIST.get(1750));
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
+  ASSERT_TRUE(v == gs.GRAD_LIST.get(1750));
 
   double_and_int* v2 = NULL;
   {
@@ -81,9 +76,9 @@ TEST_F(test_grad_list, recycle)
     ASSERT_TRUE(v == v2);
   }
 
-  ASSERT_EQ(gs.GRAD_LIST.total_addresses(), 1751);
-  ASSERT_TRUE(&v->x == gs.GRAD_LIST.get(1750));
+  ASSERT_EQ(gs.GRAD_LIST.size(), 1751);
+  ASSERT_TRUE(v == gs.GRAD_LIST.get(1750));
 
-  dlink* ret = gs.GRAD_LIST.last_remove();
-  ASSERT_TRUE(v == ret->get_address());
+  double_and_int* ret = gs.GRAD_LIST.get_unused();
+  ASSERT_TRUE(v == ret);
 }

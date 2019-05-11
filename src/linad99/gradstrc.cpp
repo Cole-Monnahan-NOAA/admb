@@ -202,6 +202,7 @@ void cleanup_temporary_files()
  * Description not yet available.
  * \param
  */
+/*
 void allocate_dvariable_space()
 {
   int on,nopt = 0;
@@ -264,6 +265,7 @@ void allocate_dvariable_space()
     gs->GRAD_LIST.last=dl;
   }
 }
+*/
 
 /**
 Constructor
