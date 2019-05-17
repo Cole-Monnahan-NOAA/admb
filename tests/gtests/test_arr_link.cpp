@@ -8,6 +8,87 @@ extern "C"
 
 class test_arr_link: public ::testing::Test {};
 
+TEST_F(test_arr_link, deallocate)
+{
+  gradient_structure gs;
+
+  dvar_vector v;
+  v.allocate(1, 4);
+  arr_link* ptr = v.link_ptr;
+  dvar_vector v2;
+  v2.allocate(1, 10);
+  arr_link* ptr2 = v2.link_ptr;
+
+  ASSERT_TRUE(ptr2->get_status() == 1);
+  ASSERT_TRUE(ptr2->get_next() == 0);
+  ASSERT_TRUE(ptr2->get_prev() == ptr);
+  ASSERT_TRUE(ptr2->get_prev()->get_status() == 1);
+  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_number_arr_links() == 2);
+  ASSERT_TRUE(ptr->get_next() == ptr2);
+  v2.deallocate();
+  ASSERT_TRUE(ptr->get_next() == 0);
+  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_number_arr_links() == 1);
+  ASSERT_TRUE(ptr2->get_status() == 0);
+  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_last() == ptr);
+  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_last_offset() == ptr->get_size());
+}
+TEST_F(test_arr_link, allocate)
+{
+  gradient_structure gs;
+
+  dvar_vector v;
+  v.allocate(1, 4);
+
+  ASSERT_TRUE(*(arr_link**)v.shape->trueptr == v.link_ptr);
+  ASSERT_TRUE(v.link_ptr->get_prev() == 0);
+  ASSERT_TRUE(v.link_ptr->get_next() == 0);
+  ASSERT_TRUE(v.link_ptr->get_status() == 1);
+  ASSERT_TRUE(v.link_ptr->get_offset() == 0);
+  ASSERT_TRUE(v.link_ptr->get_size() == sizeof(double_and_int) * 4);
+
+  double_and_int* p = v.va;
+  p += v.indexmin();
+  ASSERT_TRUE(*(arr_link**)p == v.link_ptr);
+
+  double* ptr = gradient_structure::get_ARRAY_MEMBLOCK_BASE();
+  ASSERT_TRUE(ptr == (double*)v.shape->trueptr);
+
+  v.initialize();
+  ASSERT_DOUBLE_EQ(value(v(1)), 0.0);
+  ASSERT_DOUBLE_EQ(value(v(2)), 0.0);
+  ASSERT_DOUBLE_EQ(value(v(3)), 0.0);
+  ASSERT_DOUBLE_EQ(value(v(4)), 0.0);
+
+  dvar_vector v2;
+  v2.allocate(1, 10);
+  ASSERT_TRUE(*(arr_link**)v2.shape->trueptr == v2.link_ptr);
+  ASSERT_TRUE(v2.link_ptr->get_prev() == v.link_ptr);
+  ASSERT_TRUE(v.link_ptr->get_next() == v2.link_ptr);
+  ASSERT_TRUE(v2.link_ptr->get_next() == 0);
+  ASSERT_TRUE(v2.link_ptr->get_status() == 1);
+  ASSERT_TRUE(v2.link_ptr->get_offset() == v.link_ptr->get_size());
+  ASSERT_TRUE(v2.link_ptr->get_size() == sizeof(double_and_int) * 10);
+
+  void* ptr2 = (void*)ptr + v.link_ptr->get_size();
+  ASSERT_TRUE(ptr2 == v2.shape->trueptr);
+}
+TEST_F(test_arr_link, tryit)
+{
+  char* real_start = new char[100];
+  memset(real_start, 1, 100);
+  for (int i = 0; i < 100; ++i)
+  {
+    ASSERT_EQ(real_start[i], 1);
+  }
+  *(char**)real_start = 0;
+  for (int i = 10; i < 100; ++i)
+  {
+	  cout << i << endl;
+    ASSERT_EQ(real_start[i], 1);
+  }
+  delete [] real_start;
+  real_start = NULL;
+}
 TEST_F(test_arr_link, arr_remove_null)
 {
   void arr_remove(arr_link** pptr);

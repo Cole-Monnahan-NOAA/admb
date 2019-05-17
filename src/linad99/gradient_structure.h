@@ -50,13 +50,104 @@ class DF_FILE;
 class dvector;
 class dmatrix;
 class double_and_int;
-class arr_list;
 class dvar_vector;
 class dvar_vector_position;
 class prevariable;
 class dependent_variables_information;
 class grad_stack;
 class uostream;
+
+class arr_link
+{
+   arr_link *prev;
+   arr_link *next;
+   arr_link *free_prev;
+   arr_link *free_next;
+   unsigned int status;
+   // unsigned int     free_list_status;
+   unsigned int size;
+   unsigned long int offset;
+
+ public:
+#if defined(USE_VECTOR_SHAPE_POOL)
+  static vector_shape_pool& get_xpool()
+  {
+    static vector_shape_pool xpool(sizeof(arr_link));
+    return xpool;
+  }
+  void* operator new(size_t);
+  void operator delete(void* ptr, size_t)
+    { arr_link::get_xpool().free(ptr); }
+  arr_link(const arr_link&) = delete;
+  arr_link& operator=(const arr_link&) = delete;
+#endif
+
+  arr_link();
+
+  arr_link* get_prev() const
+    { return prev; }
+  arr_link* get_next() const
+    { return next; }
+  unsigned int get_size() const
+    { return size; }
+  unsigned long get_offset() const
+    { return offset; }
+  unsigned int get_status() const
+    { return status; }
+
+   friend double_and_int *arr_new(unsigned int);
+   friend void arr_free(double_and_int *);
+   friend void arr_remove(arr_link **);
+   friend void arr_free_remove(arr_link *);
+   friend void arr_free_add(arr_link *);
+};
+
+class arr_list
+{
+   arr_link *last;
+   arr_link *free_last;
+   unsigned long int last_offset;
+   unsigned long int max_last_offset;
+ public:
+   unsigned long int number_arr_links;
+   friend class arr_link;
+
+ public:
+   arr_list(void)
+   {
+      last = 0;
+      free_last = 0;
+      last_offset = 0;
+      max_last_offset = 0;
+      number_arr_links = 0;
+   }
+
+  arr_link* get_last() const
+    { return last; }
+
+   unsigned long int get_last_offset()
+   {
+      return last_offset;
+   }
+   unsigned long int get_number_arr_links()
+   {
+      return number_arr_links;
+   }
+   unsigned long int get_max_last_offset()
+   {
+      return max_last_offset;
+   }
+   void reset_max_last_offset()
+   {
+      max_last_offset = 0;
+   }
+   friend double_and_int *arr_new(unsigned int);
+   friend void arr_free(double_and_int *);
+   friend void arr_remove(arr_link **);
+   friend void arr_free_list_remove(arr_link **);
+   friend void arr_free_add(arr_link *);
+   friend void arr_free_remove(arr_link *);
+};
 
 /**
 Link list

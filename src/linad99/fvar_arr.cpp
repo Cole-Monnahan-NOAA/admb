@@ -236,9 +236,6 @@ void dvar_vector::allocate(int ncl, int nch)
   {
     index_min=ncl;
     index_max=nch;
-#ifndef OPT_LIB
-    assert(nch >= ncl);
-#endif
     unsigned int itemp = (unsigned int)(nch - ncl + 1);
 /*
     if (itemp<=0)
