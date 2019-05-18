@@ -121,7 +121,7 @@ void funnel_gradcalc(void)
     (double_and_int*)gradient_structure::ARRAY_MEMBLOCK_BASE;
 
      unsigned long int max_last_offset =
-       gradient_structure::get()->ARR_LIST1->get_max_last_offset();
+       gradient_structure::get()->ARR_LIST1.get_max_last_offset();
 
   size_t size = sizeof(double_and_int);
 
@@ -193,7 +193,7 @@ do
   //if (gradient_structure::save_var_flag)
   {
     unsigned long bytes_needed = min(
-      gradient_structure::get()->ARR_LIST1->get_last_offset() + 1,
+      gradient_structure::get()->ARR_LIST1.get_last_offset() + 1,
       gradient_structure::ARRAY_MEMBLOCK_SIZE);
     size_t _dsize = bytes_needed/sizeof(double);
 #ifndef OPT_LIB

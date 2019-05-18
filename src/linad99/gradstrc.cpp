@@ -363,9 +363,6 @@ gradient_structure::gradient_structure(long int _size):
   cerr <<"  ARRAY_MEMBLOCK_SIZE = " << ARRAY_MEMBLOCK_SIZE << "\n";
 #endif
 
-  ARR_LIST1 = new arr_list;
-  memory_allocate_error("ARR_LIST1", (void *) ARR_LIST1);
-
    void* temp_ptr = NULL;
 #ifdef __ZTC__
    if ((temp_ptr = farmalloc(ARRAY_MEMBLOCK_SIZE)) == 0)
@@ -553,16 +550,6 @@ gradient_structure::~gradient_structure()
   else
   {
     ARRAY_MEMBLOCK_BASE.free();
-  }
-  if (ARR_LIST1 == NULL)
-  {
-    null_ptr_err_message();
-    ad_exit(1);
-  }
-  else
-  {
-    delete ARR_LIST1;
-    ARR_LIST1 = NULL;
   }
 
   instances--;
