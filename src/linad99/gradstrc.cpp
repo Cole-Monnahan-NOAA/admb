@@ -106,7 +106,6 @@ int gradient_structure::save_var_file_flag=0;
 
 unsigned long gradient_structure::ARRAY_MEMBLOCK_SIZE = 0L; //js
 grad_stack* gradient_structure::GRAD_STACK1;
-arr_list * gradient_structure::ARR_FREE_LIST1 = NULL;
 unsigned int gradient_structure::MAX_DLINKS = 5000;
 
 // note: ARRAY_MEMBLOCK stuff is set by tpl2cpp for historical reasons
@@ -366,18 +365,6 @@ gradient_structure::gradient_structure(long int _size):
 
   ARR_LIST1 = new arr_list;
   memory_allocate_error("ARR_LIST1", (void *) ARR_LIST1);
-
-/*
-   if ( ARR_FREE_LIST1!= NULL)
-   {
-cerr << "  2 Trying to allocate to a non NULL pointer in gradient structure \n";
-   }
-   else
-   {
-      ARR_FREE_LIST1 = new arr_list;
-      memory_allocate_error("ARR_FREE_LIST1", (void *) ARR_FREE_LIST1);
-   }
-*/
 
    void* temp_ptr = NULL;
 #ifdef __ZTC__

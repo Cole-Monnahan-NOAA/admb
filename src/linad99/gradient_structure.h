@@ -336,7 +336,6 @@ dlist GRAD_LIST;
    static dvariable *MIN_RETURN;
    static dvariable *MAX_RETURN;
 arr_list* ARR_LIST1;
-   static arr_list *ARR_FREE_LIST1;
    //static void funnel_jacobcalc(void);
    static void jacobcalc(int nvar, const dmatrix & jac);
    static void jacobcalc(int nvar, const ofstream & jac);
