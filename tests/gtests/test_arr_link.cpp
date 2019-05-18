@@ -23,14 +23,14 @@ TEST_F(test_arr_link, deallocate)
   ASSERT_TRUE(ptr2->get_next() == 0);
   ASSERT_TRUE(ptr2->get_prev() == ptr);
   ASSERT_TRUE(ptr2->get_prev()->get_status() == 1);
-  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_number_arr_links() == 2);
+  ASSERT_TRUE(gradient_structure::get()->ARR_LIST1->get_number_arr_links() == 2);
   ASSERT_TRUE(ptr->get_next() == ptr2);
   v2.deallocate();
   ASSERT_TRUE(ptr->get_next() == 0);
-  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_number_arr_links() == 1);
+  ASSERT_TRUE(gradient_structure::get()->ARR_LIST1->get_number_arr_links() == 1);
   ASSERT_TRUE(ptr2->get_status() == 0);
-  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_last() == ptr);
-  ASSERT_TRUE(gradient_structure::ARR_LIST1->get_last_offset() == ptr->get_size());
+  ASSERT_TRUE(gradient_structure::get()->ARR_LIST1->get_last() == ptr);
+  ASSERT_TRUE(gradient_structure::get()->ARR_LIST1->get_last_offset() == ptr->get_size());
 }
 TEST_F(test_arr_link, allocate)
 {
@@ -123,7 +123,7 @@ TEST_F(test_arr_link, dvar_vector1to4)
 
   dvar_vector v(1, 4);
 
-  arr_link* last = gradient_structure::ARR_LIST1->get_last();
+  arr_link* last = gradient_structure::get()->ARR_LIST1->get_last();
 
   ASSERT_TRUE(last->get_prev() == NULL);
   ASSERT_TRUE(last->get_next() == NULL);
