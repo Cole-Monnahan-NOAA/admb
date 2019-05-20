@@ -140,7 +140,7 @@ void gradcalc(int nvar, const dvector& _g)
   gradient_structure::get()->GRAD_LIST.initialize();
 
   memset(gradient_structure::ARRAY_MEMBLOCK_BASE, 0,
-    gradient_structure::ARR_LIST1->get_max_last_offset());
+    gradient_structure::get()->ARR_LIST1.get_max_last_offset());
 
   *gradient_structure::GRAD_STACK1->ptr->dep_addr = 1;
 
@@ -222,7 +222,7 @@ void gradient_structure::save_arrays()
 {
   void * temp_ptr;
   unsigned long bytes_needed =
-    min(gradient_structure::ARR_LIST1->get_last_offset() + 1,
+    min(gradient_structure::get()->ARR_LIST1.get_last_offset() + 1,
         ARRAY_MEMBLOCK_SIZE);
   gradient_structure::save_var_file_flag=0;
 #ifdef __ZTC__
@@ -296,7 +296,7 @@ void gradient_structure::save_arrays()
 void gradient_structure::restore_arrays()
 {
   unsigned long bytes_needed =
-    min(gradient_structure::ARR_LIST1->get_last_offset() + 1,
+    min(gradient_structure::get()->ARR_LIST1.get_last_offset() + 1,
         ARRAY_MEMBLOCK_SIZE);
   if (gradient_structure::save_var_file_flag==0)
   {

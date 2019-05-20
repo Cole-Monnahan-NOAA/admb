@@ -126,6 +126,9 @@ GTESTS_NEW=\
  main.cpp
 
 GTESTS_DEV=\
+ test_dfpool.cpp\
+ test_arr_link.cpp\
+ test_arr_list.cpp\
  test_grad_list.cpp\
  test_indvar_offset_list.cpp\
  main.cpp
@@ -141,14 +144,11 @@ GTESTS_DEV2=\
  test_dependent_variables_information.cpp\
  main.cpp
 
-GTESTS=$(GTESTS_DEV)
-#GTESTS=$(GTESTS_ALL)
-
 ifeq ($(CXX),openCC)
-  GTESTS:=$(filter-out test_adjson.cpp,$(GTESTS))
+  GTESTS_ALL:=$(filter-out test_adjson.cpp,$(GTESTS_ALL))
 endif
 ifeq ($(SAFE_ONLY),yes)
-  GTESTS:=$(filter-out test_adjson.cpp,$(GTESTS))
+  GTESTS_ALL:=$(filter-out test_adjson.cpp,$(GTESTS_ALL))
 endif
 
 ##Need to debug this
@@ -166,6 +166,13 @@ ifeq ($(SHELL),cmd)
 	gtest-all
 else
 	./gtest-all
+endif
+
+dev: clean gtest-dev
+ifeq ($(SHELL),cmd)
+	gtest-dev
+else
+	./gtest-dev
 endif
 
 memcheck: gtest-all
@@ -229,7 +236,21 @@ else
 	cp ../../examples/admb/finance/finance.dat .
 endif
 
-gtest-all: gtest-all.obj $(GTESTS)
+gtest-dev.obj: gtest-all.obj
+ifeq ($(SHELL),cmd)
+	copy gtest-all.obj gtest-dev.obj
+else
+	cp gtest-all.obj gtest-dev.obj
+endif
+
+gtest-dev: gtest-dev.obj $(GTESTS_DEV)
+ifeq ($(SHELL),cmd)
+	set CXXFLAGS=-I$(GTEST_DIR)\\include & set LDFLAGS=-pthread & ..\\..\\admb $(ADMB_OPTIONS) $^
+else
+	CXXFLAGS="$(CXXFLAGS) -I$(GTEST_DIR)/include" LDFLAGS=-pthread ../../admb$(EXT) $(ADMB_OPTIONS) $^
+endif
+
+gtest-all: gtest-all.obj $(GTESTS_ALL)
 ifeq ($(SHELL),cmd)
 	set CXXFLAGS=-I$(GTEST_DIR)\\include & set LDFLAGS=-pthread & ..\\..\\admb $(ADMB_OPTIONS) $^
 else
@@ -321,6 +342,7 @@ ifeq ($(SHELL),cmd)
 	@del datafiledoesexist.dat 2>NUL
 	@del pinfiledoesexist.pin 2>NUL
 	@del test_cifstream_longlong.txt 2>NUL
+	@del gtest-dev.exe 2>NUL
 	@del gtest-all.exe 2>NUL
 	@del gtest-all *.obj 2>NUL
 	@del eigv.rpt 2>NUL
@@ -421,6 +443,7 @@ else
 	@rm -vf training2.std
 	@rm -vf finance.b0
 	@rm -vf finance.p0
+	@rm -vf gtest-dev
 	@rm -vf gtest-all *.obj
 	@rm -vf eigv.rpt
 	@rm -vf fmin.log
