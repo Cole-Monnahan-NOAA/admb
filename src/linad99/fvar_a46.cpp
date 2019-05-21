@@ -60,7 +60,7 @@ dvar_vector elem_div(const dvar_vector& v1, const dvar_vector& v2)
   save_identifier_string("uuuu");
   tmp.save_dvar_vector_position();
   save_identifier_string("aaaa");
-  gradient_structure::GRAD_STACK1->set_gradient_stack(dvdv_elem_div);
+  gradient_structure::get()->GRAD_STACK1->set_gradient_stack(dvdv_elem_div);
   RETURN_ARRAYS_DECREMENT();
   return tmp;
 }
@@ -133,7 +133,7 @@ dvar_vector elem_div(const dvar_vector& v1, const dvector& v2)
   save_identifier_string("vvvv");
   tmp.save_dvar_vector_position();
   save_identifier_string("aaaa");
-  gradient_structure::GRAD_STACK1->set_gradient_stack(dvcv_elem_div);
+  gradient_structure::get()->GRAD_STACK1->set_gradient_stack(dvcv_elem_div);
   RETURN_ARRAYS_DECREMENT();
   return tmp;
 }
@@ -199,7 +199,7 @@ dvar_vector elem_div(const dvector& v1, const dvar_vector& v2)
   save_identifier_string("uuuu");
   tmp.save_dvar_vector_position();
   save_identifier_string("aaaa");
-  gradient_structure::GRAD_STACK1->set_gradient_stack(cvdv_elem_div);
+  gradient_structure::get()->GRAD_STACK1->set_gradient_stack(cvdv_elem_div);
   RETURN_ARRAYS_DECREMENT();
   return tmp;
 }
