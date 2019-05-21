@@ -79,11 +79,9 @@ int grad_stack::read_grad_stack_buffer(OFF_T& lpos)
     // check to see if we are past the beginning of this file
     if (lpos < 0)
     {
-      lpos = LSEEK(gradient_structure::GRAD_STACK1->_GRADFILE_PTR,
-        0L,SEEK_SET);
+      lpos = LSEEK(_GRADFILE_PTR, 0L,SEEK_SET);
       // get the previous file
-      if (gradient_structure::GRAD_STACK1->decrement_current_gradfile_ptr()
-                        < 0)
+      if (decrement_current_gradfile_ptr() < 0)
       {
         // there is no more file to read ... but perhaps the beginning of
         // the buffer has not been used
@@ -112,7 +110,7 @@ int grad_stack::read_grad_stack_buffer(OFF_T& lpos)
       if (lpos == -1L)
       {
         cerr << "Error positioning temporary gradient file "
-             << gradient_structure::GRAD_STACK1->get_gradfile_name()
+             << get_gradfile_name()
              << " after open.\n";
         ad_exit(1);
       }

@@ -44,17 +44,17 @@ TEST_F(test_autodif, dvar_vector_with_no_gradient_structure)
 }
 TEST_F(test_autodif, reinitialize_grad_stack1_scoped)
 {
-  ASSERT_TRUE(gradient_structure::GRAD_STACK1 == NULL);
+  ASSERT_TRUE(gradient_structure::get() == NULL);
   {
     gradient_structure gs(1500);
-    ASSERT_TRUE(gradient_structure::GRAD_STACK1 != NULL);
+    ASSERT_TRUE(gradient_structure::get()->GRAD_STACK1 != NULL);
 
     const int nvar = 1;
     independent_variables variables(1, nvar);
     dvar_vector x(variables);
-    ASSERT_TRUE(gradient_structure::GRAD_STACK1 != NULL);
+    ASSERT_TRUE(gradient_structure::get()->GRAD_STACK1 != NULL);
   }
-  ASSERT_TRUE(gradient_structure::GRAD_STACK1 == NULL);
+  ASSERT_TRUE(gradient_structure::get() == NULL);
 }
 /*
 TEST_F(test_autodif, dvar_vector3)

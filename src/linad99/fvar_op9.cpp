@@ -37,7 +37,7 @@ prevariable& prevariable::operator+=(const prevariable& other)
 {
   (*v).x += (*other.v).x;
 
-  gradient_structure::GRAD_STACK1->set_gradient_stack1
+  gradient_structure::get()->GRAD_STACK1->set_gradient_stack1
     (df_plus_eq_pvpv,&(v->x),&(other.v->x));
 
   return *this;
@@ -56,8 +56,8 @@ void df_plus_eq_pvpv(void)
   //gradlog << setprecision(13) <<
   //  *gradient_structure::GRAD_STACK1->ptr->ind_addr1 << endl;
 
-  *gradient_structure::GRAD_STACK1->ptr->ind_addr1
-    += *gradient_structure::GRAD_STACK1->ptr->dep_addr;
+  *gradient_structure::get()->GRAD_STACK1->ptr->ind_addr1
+    += *gradient_structure::get()->GRAD_STACK1->ptr->dep_addr;
 
   //gradlog << setprecision(13) <<
   //  *gradient_structure::GRAD_STACK1->ptr->ind_addr1 << endl;
