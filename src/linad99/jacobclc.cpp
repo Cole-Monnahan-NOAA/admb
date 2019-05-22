@@ -268,6 +268,6 @@ void gradient_structure::jacobcalc(int nvar, const dmatrix& _jac)
   if (gradient_structure::save_var_flag)
   {
     gradient_structure::restore_arrays();
-    gradient_structure::restore_variables();
+    gs->restore_variables();
   }
 }

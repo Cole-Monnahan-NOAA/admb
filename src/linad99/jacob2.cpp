@@ -233,6 +233,6 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
   if (gradient_structure::save_var_flag)
   {
     gradient_structure::restore_arrays();
-    gradient_structure::restore_variables();
+    gs->restore_variables();
   }
 }

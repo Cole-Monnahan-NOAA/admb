@@ -286,7 +286,7 @@ do
 
     GRAD_STACK1->set_gradient_stack(funnel_derivatives);
     gradient_structure::restore_arrays();
-    gradient_structure::restore_variables();
+    gs->restore_variables();
   }
 }
 

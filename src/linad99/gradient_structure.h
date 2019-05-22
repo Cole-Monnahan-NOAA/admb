@@ -302,11 +302,13 @@ indvar_offset_list INDVAR_LIST;
    friend class dfsdmat;
    gradient_structure(long int size = 100000L);// constructor
    ~gradient_structure(void);// destructor
-void save_variables(void);
-   static void restore_variables(void);
+
+void save_variables();
+void restore_variables();
    static void save_arrays(void);
    static void restore_arrays(void);
    static size_t totalbytes(void);
+
    friend dvector restore_dvar_vector_value(
      const dvar_vector_position& tmp);
    friend void cleanup_temporary_files();
