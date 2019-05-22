@@ -284,10 +284,8 @@ void gradient_structure::save_arrays()
 
 /**
  */
-#include <cassert>
 void gradient_structure::restore_arrays()
 {
-	assert(false);
   unsigned long bytes_needed = min(ARR_LIST1.get_last_offset() + 1, ARRAY_MEMBLOCK_SIZE);
   if (gradient_structure::save_var_file_flag==0)
   {
