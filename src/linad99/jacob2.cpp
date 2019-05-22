@@ -70,7 +70,8 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
   OFF_T lpos;
   int depvar_count=DEPVARS_INFO->depvar_count;
 
-  grad_stack* GRAD_STACK1 = gradient_structure::get()->GRAD_STACK1;
+  gradient_structure* gs = gradient_structure::get();
+  grad_stack* GRAD_STACK1 = gs->GRAD_STACK1;
 
   int& _GRADFILE_PTR=GRAD_STACK1->_GRADFILE_PTR;
   // check to see if anything has been written into the file
@@ -95,7 +96,7 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
   if (save_var_flag)
   {
     save_arrays();
-    save_variables();
+    gs->save_variables();
   }
   // now evalueate the jacobian
   for (int ijac=1;ijac<=depvar_count;ijac++)

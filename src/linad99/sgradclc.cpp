@@ -111,7 +111,9 @@ void gradcalc(int nvar, const dvector& _g)
     ad_exit(1);
   }
 
-  grad_stack* GRAD_STACK1 = gradient_structure::get()->GRAD_STACK1;
+  gradient_structure* gs = gradient_structure::get();
+  grad_stack* GRAD_STACK1 = gs->GRAD_STACK1;
+
   GRAD_STACK1->_GRADFILE_PTR = GRAD_STACK1->gradfile_handle();
 
   int& _GRADFILE_PTR=GRAD_STACK1->_GRADFILE_PTR;
@@ -131,7 +133,7 @@ void gradcalc(int nvar, const dvector& _g)
   if (gradient_structure::save_var_flag)
   {
     gradient_structure::save_arrays();
-    gradient_structure::save_variables();
+    gs->save_variables();
   }
 
   GRAD_STACK1->ptr--;
