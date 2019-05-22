@@ -95,7 +95,7 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
   // save variable values if desired
   if (save_var_flag)
   {
-    save_arrays();
+    gs->save_arrays();
     gs->save_variables();
   }
   // now evalueate the jacobian

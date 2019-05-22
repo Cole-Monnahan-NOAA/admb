@@ -305,7 +305,7 @@ indvar_offset_list INDVAR_LIST;
 
 void save_variables();
 void restore_variables();
-   static void save_arrays(void);
+void save_arrays();
    static void restore_arrays(void);
    static size_t totalbytes(void);
 

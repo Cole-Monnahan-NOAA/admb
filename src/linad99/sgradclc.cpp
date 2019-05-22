@@ -132,7 +132,7 @@ void gradcalc(int nvar, const dvector& _g)
 
   if (gradient_structure::save_var_flag)
   {
-    gradient_structure::save_arrays();
+    gs->save_arrays();
     gs->save_variables();
   }
 
@@ -212,14 +212,10 @@ double gradcalc(int nvar, const dvector& _g, dvariable& f)
   return v;
 }
 */
-/**
- */
 void gradient_structure::save_arrays()
 {
   void * temp_ptr;
-  unsigned long bytes_needed =
-    min(gradient_structure::get()->ARR_LIST1.get_last_offset() + 1,
-        ARRAY_MEMBLOCK_SIZE);
+  unsigned long bytes_needed = min(ARR_LIST1.get_last_offset() + 1, ARRAY_MEMBLOCK_SIZE);
   gradient_structure::save_var_file_flag=0;
 #ifdef __ZTC__
    if ( (temp_ptr = farmalloc(bytes_needed) ) == 0)
@@ -261,7 +257,6 @@ void gradient_structure::save_arrays()
   }
   else
   {
-     grad_stack* GRAD_STACK1 = gradient_structure::get()->GRAD_STACK1;
      humungous_pointer src = ARRAY_MEMBLOCK_BASE;
      LSEEK(GRAD_STACK1->_VARSSAV_PTR,0L,SEEK_SET);
 #if defined(DOS386)

@@ -140,7 +140,7 @@ void gradient_structure::jacobcalc(int nvar, const dmatrix& _jac)
   // save variable values if desired
   if (save_var_flag)
   {
-    save_arrays();
+    gs->save_arrays();
     gs->save_variables();
   }
   // now evalueate the jacobian

@@ -110,7 +110,7 @@ void funnel_gradcalc(void)
 
   //if (gradient_structure::save_var_flag)
   {
-    gradient_structure::save_arrays();
+    gs->save_arrays();
     gs->save_variables();
   }
 
