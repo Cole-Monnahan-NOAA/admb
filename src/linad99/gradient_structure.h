@@ -306,7 +306,7 @@ indvar_offset_list INDVAR_LIST;
 void save_variables();
 void restore_variables();
 void save_arrays();
-   static void restore_arrays(void);
+void restore_arrays();
    static size_t totalbytes(void);
 
    friend dvector restore_dvar_vector_value(

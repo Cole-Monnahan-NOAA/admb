@@ -219,7 +219,7 @@ void gradient_structure::jacobcalc(int nvar, const uostream& ofs)
   DEPVARS_INFO->depvar_count=0;
   if (gradient_structure::save_var_flag)
   {
-    gradient_structure::restore_arrays();
+    gs->restore_arrays();
     gs->restore_variables();
   }
 }

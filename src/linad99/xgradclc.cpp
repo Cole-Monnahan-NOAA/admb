@@ -285,7 +285,7 @@ do
     save_identifier_string("ae");
 
     GRAD_STACK1->set_gradient_stack(funnel_derivatives);
-    gradient_structure::restore_arrays();
+    gs->restore_arrays();
     gs->restore_variables();
   }
 }
