@@ -337,11 +337,13 @@ dlist GRAD_LIST;
    static dvariable *RETURN_PTR;
    static dvariable *MIN_RETURN;
    static dvariable *MAX_RETURN;
+
 arr_list ARR_LIST1;
+
    //static void funnel_jacobcalc(void);
-   static void jacobcalc(int nvar, const dmatrix & jac);
-   static void jacobcalc(int nvar, const ofstream & jac);
-   static void jacobcalc(int nvar, const uostream & jac);
+void jacobcalc(int nvar, const dmatrix& jac);
+void jacobcalc(int nvar, const ofstream& jac);
+void jacobcalc(int nvar, const uostream& jac);
 
    friend void default_evaluation(void);
    //access functions

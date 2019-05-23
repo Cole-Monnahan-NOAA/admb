@@ -56,7 +56,7 @@
  */
 void jacobcalc(int nvar, const ofstream& ofs)
 {
-  gradient_structure::jacobcalc(nvar,ofs);
+  gradient_structure::get()->jacobcalc(nvar,ofs);
 }
 
 /**
@@ -69,9 +69,6 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
   dvector jac(1,nvar);
   OFF_T lpos;
   int depvar_count=DEPVARS_INFO->depvar_count;
-
-  gradient_structure* gs = gradient_structure::get();
-  grad_stack* GRAD_STACK1 = gs->GRAD_STACK1;
 
   int& _GRADFILE_PTR=GRAD_STACK1->_GRADFILE_PTR;
   // check to see if anything has been written into the file
@@ -95,8 +92,8 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
   // save variable values if desired
   if (save_var_flag)
   {
-    gs->save_arrays();
-    gs->save_variables();
+    save_arrays();
+    save_variables();
   }
   // now evalueate the jacobian
   for (int ijac=1;ijac<=depvar_count;ijac++)
@@ -168,13 +165,12 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
 
     GRAD_STACK1->ptr--;
 
-    get()->GRAD_LIST.initialize();
+    GRAD_LIST.initialize();
 
     double_and_int* tmp =
       (double_and_int*)gradient_structure::ARRAY_MEMBLOCK_BASE;
 
-    unsigned long int max_last_offset
-               = gradient_structure::get()->ARR_LIST1.get_max_last_offset();
+    unsigned long int max_last_offset = ARR_LIST1.get_max_last_offset();
 
     size_t size = sizeof(double_and_int );
 
@@ -222,7 +218,7 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
     int mindx = g.indexmin();
     for (int i=0; i < nvar; i++)
     {
-      g[i+mindx] =  * gradient_structure::get()->INDVAR_LIST.get_address(i);
+      g[i+mindx] =  *INDVAR_LIST.get_address(i);
     }
     GRAD_STACK1->ptr = GRAD_STACK1->ptr_first;
     //ofs << setprecision(10) << g << endl;
@@ -232,7 +228,7 @@ void gradient_structure::jacobcalc(int nvar, const ofstream& _ofs)
   DEPVARS_INFO->depvar_count=0;
   if (gradient_structure::save_var_flag)
   {
-    gs->restore_arrays();
-    gs->restore_variables();
+    restore_arrays();
+    restore_variables();
   }
 }
