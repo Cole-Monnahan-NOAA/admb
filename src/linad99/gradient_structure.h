@@ -307,7 +307,7 @@ void save_variables();
 void restore_variables();
 void save_arrays();
 void restore_arrays();
-   static size_t totalbytes(void);
+size_t totalbytes();
 
    friend dvector restore_dvar_vector_value(
      const dvar_vector_position& tmp);
@@ -329,9 +329,11 @@ void restore_arrays();
    friend void allocate_dvariable_space(void);
    friend void wide_funnel_gradcalc(void);
    friend dvar_vector_position restore_dvar_vector_position(void);
-grad_stack* GRAD_STACK1;
    friend double_and_int *gradnew();
+
+grad_stack* GRAD_STACK1;
 dlist GRAD_LIST;
+
    static unsigned int RETURN_ARRAYS_SIZE;
    //static int RETURN_INDEX;
    static dvariable *RETURN_PTR;
