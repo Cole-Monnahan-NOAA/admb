@@ -381,7 +381,7 @@ void jacobcalc(int nvar, const uostream& jac);
    static void set_MAX_DLINKS(int i);
    static size_t NUM_GRADSTACK_BYTES_WRITTEN(void);
    static unsigned int get_MAX_DLINKS() { return MAX_DLINKS; }
-   static void save_dependent_variable_position(const prevariable & v1);
+void save_dependent_variable_position(const prevariable&);
    static unsigned long int max_last_offset;
 
    /// Deprecated
