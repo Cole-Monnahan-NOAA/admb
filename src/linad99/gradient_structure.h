@@ -274,7 +274,7 @@ class gradient_structure
    static unsigned int MAX_DLINKS;
 indvar_offset_list INDVAR_LIST;
    static int NUM_DEPENDENT_VARIABLES;
-   static dependent_variables_information *DEPVARS_INFO;
+dependent_variables_information* DEPVARS_INFO;
 
    // this needs to be a static member function so other static
    // member functions can call it

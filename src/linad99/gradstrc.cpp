@@ -99,8 +99,6 @@ size_t gradient_structure::GRADSTACK_BUFFER_SIZE = 4000000L;
 size_t gradient_structure::CMPDIF_BUFFER_SIZE=140000000L;
 #endif
 
-dependent_variables_information * gradient_structure::DEPVARS_INFO=NULL;
-
 int gradient_structure::save_var_flag=0;
 int gradient_structure::save_var_file_flag=0;
 
@@ -280,12 +278,6 @@ gradient_structure::gradient_structure(long int _size):
   {
     sprintf(&cmpdif_file_name[0],"cmpdiff.%s",ad_random_part);
   }
-  if (DEPVARS_INFO!= NULL)
-  {
-    cerr << "  0 Trying to allocate to a non NULL pointer in gradient"
-            "_structure" << endl;
-  }
-  else
   {
     int on,nopt = 0;
     if ( (on=option_match(ad_comm::argc,ad_comm::argv,"-ndv",nopt))>-1)
