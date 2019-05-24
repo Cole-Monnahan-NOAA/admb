@@ -116,13 +116,12 @@ void funnel_gradcalc(void)
 
   GRAD_STACK1->ptr--;
 
-  gradient_structure::get()->GRAD_LIST.initialize();
+  gs->GRAD_LIST.initialize();
 
   double_and_int* tmp =
     (double_and_int*)gradient_structure::ARRAY_MEMBLOCK_BASE;
 
-     unsigned long int max_last_offset =
-       gradient_structure::get()->ARR_LIST1.get_max_last_offset();
+  unsigned long int max_last_offset = gs->ARR_LIST1.get_max_last_offset();
 
   size_t size = sizeof(double_and_int);
 
@@ -190,9 +189,9 @@ do
 
   //if (gradient_structure::save_var_flag)
   {
-    unsigned long bytes_needed = min(
-      gradient_structure::get()->ARR_LIST1.get_last_offset() + 1,
-      gradient_structure::ARRAY_MEMBLOCK_SIZE);
+    unsigned long bytes_needed =
+      min(gs->ARR_LIST1.get_last_offset() + 1, gradient_structure::ARRAY_MEMBLOCK_SIZE);
+
     size_t _dsize = bytes_needed/sizeof(double);
 #ifndef OPT_LIB
     assert(_dsize <= INT_MAX);
@@ -259,7 +258,7 @@ do
     }
     save_int_value(ii);
 
-    unsigned int ssize=gradient_structure::get()->GRAD_LIST.size();
+    unsigned int ssize=gs->GRAD_LIST.size();
 #ifndef OPT_LIB
     assert(ssize > 0);
     assert(ssize <= INT_MAX);
@@ -267,12 +266,11 @@ do
     dvector stmp(0,(int)(ssize-1));
 
 #ifndef OPT_LIB
-    assert(gradient_structure::get()->GRAD_LIST.size() <= INT_MAX);
+    assert(gs->GRAD_LIST.size() <= INT_MAX);
 #endif
-    for (int i=0; i < (int)gradient_structure::get()->GRAD_LIST.size(); i++)
+    for (int i=0; i < (int)gs->GRAD_LIST.size(); i++)
     {
-      memcpy((char*)&(stmp(i)),
-        gradient_structure::get()->GRAD_LIST.get(i),sizeof(double));
+      memcpy((char*)&(stmp(i)), gs->GRAD_LIST.get(i),sizeof(double));
     }
     //dtmp.save_dvector_value();
     //dtmp.save_dvector_position();
@@ -281,7 +279,7 @@ do
 
     // save the address of the dependent variable for the funnel
     size_t wsize=sizeof(double_and_int*);
-    gradient_structure::get_fp()->fwrite(&zptr, wsize);
+    gs->get_fp()->fwrite(&zptr, wsize);
     save_identifier_string("ae");
 
     GRAD_STACK1->set_gradient_stack(funnel_derivatives);
@@ -346,12 +344,13 @@ void funnel_derivatives(void)
     }
   }
 
+  gradient_structure* gs = gradient_structure::get();
   int smax=stmp.indexmax();
   for (i=0;i<smax;i++)
   {
     if (!ISZERO(stmp(i)))
     {
-      gradient_structure::get()->GRAD_LIST.get(i)->x +=stmp(i)*df;
+      gs->GRAD_LIST.get(i)->x +=stmp(i)*df;
     }
   }
 }

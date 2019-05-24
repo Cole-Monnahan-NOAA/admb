@@ -287,6 +287,7 @@ void dmatrix::save_dmatrix_derivatives_na(const dvar_matrix_position& _pos)
  */
 void dvar_matrix::save_dvar_matrix_position(void) const
 {
+  DF_FILE& fp = *gradient_structure::get()->get_fp();
   // saves the size and address information for a dvar_vector
   dvar_matrix_position tmp(*this,1);
   size_t wsize=sizeof(int);
@@ -296,10 +297,10 @@ void dvar_matrix::save_dvar_matrix_position(void) const
   int max=rowmax();
   for (int i=min;i<=max;i++)
   {
-    gradient_structure::get_fp()->fwrite(&(tmp.lb(i)),wsize);
-    gradient_structure::get_fp()->fwrite(&(tmp.ub(i)),wsize);
-    gradient_structure::get_fp()->fwrite(&(tmp.ptr(i)),wsize1);
+    fp.fwrite(&(tmp.lb(i)),wsize);
+    fp.fwrite(&(tmp.ub(i)),wsize);
+    fp.fwrite(&(tmp.ptr(i)),wsize1);
    }
-  gradient_structure::get_fp()->fwrite(&(tmp.row_min),wsize);
-  gradient_structure::get_fp()->fwrite(&(tmp.row_max),wsize);
+  fp.fwrite(&(tmp.row_min),wsize);
+  fp.fwrite(&(tmp.row_max),wsize);
 }

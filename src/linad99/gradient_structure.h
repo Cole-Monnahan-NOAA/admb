@@ -235,7 +235,7 @@ class gradient_structure
   static gradient_structure* _instance;
 
    static char cmpdif_file_name[61];
-   static DF_FILE *fp;
+  DF_FILE *fp;
  public:
 #if defined(NO_DERIVS)
    static int no_derivatives;
@@ -351,10 +351,9 @@ void jacobcalc(int nvar, const uostream& jac);
    //access functions
 
    friend class DF_FILE;
-   static DF_FILE *get_fp(void)
-   {
-      return fp;
-   }
+
+DF_FILE* get_fp() { return fp; }
+
    static void set_NUM_RETURN_ARRAYS(unsigned int i);
 #if defined(NO_DERIVS)
    static void set_NO_DERIVATIVES(void);
