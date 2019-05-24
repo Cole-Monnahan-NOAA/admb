@@ -234,7 +234,6 @@ class gradient_structure
 {
   static gradient_structure* _instance;
 
-   static char cmpdif_file_name[61];
   DF_FILE *fp;
  public:
 #if defined(NO_DERIVS)

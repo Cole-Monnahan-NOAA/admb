@@ -67,7 +67,6 @@ gradient_structure* gradient_structure::_instance = NULL;
 // *************************************************************
 int ctlc_flag = 0;
 int gradient_structure::Hybrid_bounded_flag=0;
-char gradient_structure::cmpdif_file_name[61];
 //char gradient_structure::var_store_file_name[61];
 unsigned int gradient_structure::NUM_RETURN_ARRAYS = 25;
 double * gradient_structure::hessian_ptr=NULL;
@@ -249,29 +248,6 @@ gradient_structure::gradient_structure(long int _size):
   gradient_structure::ARRAY_MEMBLOCK_SIZE =
     static_cast<unsigned long int>(_size - remainder);
 
-  char* path = getenv("ADTMP1"); // NULL if not defined
-  if (path != NULL && strlen(path) <= 45)
-  {
-#ifdef __SUN__
-    sprintf(&cmpdif_file_name[0],"%s/cmpdiff.%s", path,
-            ad_random_part);
-#else
-    if (lastchar(path)!='\\')
-    {
-      sprintf(&cmpdif_file_name[0],"%s\\cmpdiff.%s", path,
-              ad_random_part);
-    }
-    else
-    {
-      sprintf(&cmpdif_file_name[0],"%scmpdiff.%s", path,
-              ad_random_part);
-    }
-#endif
-  }
-  else
-  {
-    sprintf(&cmpdif_file_name[0],"cmpdiff.%s",ad_random_part);
-  }
   {
     int on,nopt = 0;
     if ( (on=option_match(ad_comm::argc,ad_comm::argv,"-ndv",nopt))>-1)
