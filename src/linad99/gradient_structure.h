@@ -239,7 +239,7 @@ class gradient_structure
  private:
    static long int USE_FOR_HESSIAN;
    static unsigned int NUM_RETURN_ARRAYS;
-   static dvariable **RETURN_ARRAYS;
+dvariable** RETURN_ARRAYS;
    static unsigned int RETURN_ARRAYS_PTR;
    static dvariable **RETURN_PTR_CONTAINER;
    static size_t TOTAL_BYTES;

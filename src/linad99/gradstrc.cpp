@@ -78,7 +78,6 @@ unsigned long int gradient_structure::max_last_offset = 0;
 size_t gradient_structure::TOTAL_BYTES = 0;
 size_t gradient_structure::PREVIOUS_TOTAL_BYTES = 0;
 long int gradient_structure::USE_FOR_HESSIAN = 0;
-dvariable** gradient_structure::RETURN_ARRAYS = NULL;
 unsigned int gradient_structure::RETURN_ARRAYS_PTR;
 dvariable ** gradient_structure::RETURN_PTR_CONTAINER = NULL;
 unsigned int gradient_structure::RETURN_ARRAYS_SIZE = 70;
@@ -322,12 +321,6 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
   //allocate_dvariable_space();
   _instance = this;
 
-  if ( RETURN_ARRAYS!= NULL)
-  {
-cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
-    ad_exit(1);
-  }
-  else
   {
     RETURN_ARRAYS = new dvariable*[NUM_RETURN_ARRAYS];
     memory_allocate_error("RETURN_ARRAYS",RETURN_ARRAYS);
@@ -376,9 +369,9 @@ void RETURN_ARRAYS_INCREMENT(void)
     ad_exit(24);
   }
   gradient_structure::MIN_RETURN =
-    gradient_structure::RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
+    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
   gradient_structure::MAX_RETURN =
-    gradient_structure::RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
+    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
     gradient_structure::RETURN_ARRAYS_SIZE-1;
   gradient_structure::RETURN_PTR = gradient_structure::MIN_RETURN;
 #if defined(THREAD_SAFE)
@@ -407,10 +400,10 @@ void RETURN_ARRAYS_DECREMENT(void)
   --gradient_structure::RETURN_ARRAYS_PTR;
 
   gradient_structure::MIN_RETURN =
-    gradient_structure::RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
+    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
   gradient_structure::MAX_RETURN =
-    gradient_structure::RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
-    gradient_structure::RETURN_ARRAYS_SIZE-1;
+    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
+    gradient_structure::get()->RETURN_ARRAYS_SIZE-1;
   gradient_structure::RETURN_PTR =
     gradient_structure::RETURN_PTR_CONTAINER[
       gradient_structure::RETURN_ARRAYS_PTR];
