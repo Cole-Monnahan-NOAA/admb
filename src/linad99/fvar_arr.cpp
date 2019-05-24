@@ -146,15 +146,20 @@ dvar_vector::dvar_vector()
  */
 void make_indvar_list(const dvar_vector& t)
 {
-  if (gradient_structure::get())
+  gradient_structure* gs = gradient_structure::get();
+  if (gs)
   {
-    unsigned int index = 0;
-    for (int i = t.indexmin(); i <= t.indexmax(); ++i)
-    {
-      gradient_structure::get()->INDVAR_LIST.put_address(index, &(t.va[i].x));
-      ++index;
-    }
+    gs->INDVAR_LIST.put_addresses(t);
     gradient_structure::NVAR = t.indexmax() - t.indexmin() + 1;
+  }
+}
+
+void indvar_offset_list::set_addresses(const dvar_vector& t)
+{
+  address.clear();
+  for (int i = t.indexmin(); i <= t.indexmax(); ++i)
+  {
+    address.push_back(&(t.va[i].x));
   }
 }
 

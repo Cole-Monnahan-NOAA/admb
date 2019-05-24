@@ -211,19 +211,12 @@ class indvar_offset_list
 {
   std::vector<double*> address;
 
- public:
-  inline double *get_address(const unsigned int &i)
+public:
+  inline double* get_address(const unsigned int &i)
   {
     return i < address.size() ? address[i] : NULL;
   }
-  void put_address(unsigned int &i, double *iaddress)
-  {
-    //  cerr << "In put_address i = " << i << "\n";
-    if (i < address.size())
-      address[i] = iaddress;
-    else
-      address.push_back(iaddress);
-  }
+  void set_addresses(const dvar_vector& t);
 };
 
 /**
