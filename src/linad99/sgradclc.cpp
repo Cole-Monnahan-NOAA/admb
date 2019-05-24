@@ -84,15 +84,16 @@ Compute the gradient from the data stored in the global \ref gradient_structure.
 */
 void gradcalc(int nvar, const dvector& _g)
 {
+  gradient_structure* gs = gradient_structure::get();
   if (nvar!=0)
   {
-    if (nvar != gradient_structure::NVAR)
+    int NVAR = gs ? static_cast<int>(gs->INDVAR_LIST.get_nvar()) : 0;
+    if (nvar != NVAR)
     {
       cerr << "nvar != gradient_structure::NVAR in gradcalc" << endl;
       cerr << "  nvar = " << nvar << endl;
-      cerr << "  gradient_structure::NVAR = " << gradient_structure::NVAR
-           << endl;
-      cerr << "  in " __FILE__ << endl;
+      cerr << "  gradient_structure::NVAR = " << NVAR << endl;
+      cerr << "  in " << __FILE__ << endl;
       ad_exit(1);
     }
   }
@@ -111,7 +112,6 @@ void gradcalc(int nvar, const dvector& _g)
     ad_exit(1);
   }
 
-  gradient_structure* gs = gradient_structure::get();
   grad_stack* GRAD_STACK1 = gs->GRAD_STACK1;
 
   GRAD_STACK1->_GRADFILE_PTR = GRAD_STACK1->gradfile_handle();

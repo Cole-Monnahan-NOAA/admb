@@ -28,6 +28,7 @@ TEST_F(test_indvar_offset_list, make_indvar_list)
     dvar_vector dvars(independents);
   }
 }
+/*
 TEST_F(test_indvar_offset_list, constructor)
 {
   indvar_offset_list list;
@@ -43,6 +44,7 @@ TEST_F(test_indvar_offset_list, constructor)
   list.put_address(index, &d1);
   ASSERT_TRUE(list.get_address(0) == &d1);
 }
+*/
 TEST_F(test_indvar_offset_list, option_mno)
 {
   ad_exit=&test_ad_exit;

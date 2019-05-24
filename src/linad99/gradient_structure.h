@@ -217,6 +217,7 @@ public:
     return i < address.size() ? address[i] : NULL;
   }
   void set_addresses(const dvar_vector& t);
+  size_t get_nvar() const { return address.size(); }
 };
 
 /**
@@ -237,7 +238,6 @@ class gradient_structure
 
  private:
    static long int USE_FOR_HESSIAN;
-   static long int NVAR;
    static unsigned int NUM_RETURN_ARRAYS;
    static dvariable **RETURN_ARRAYS;
    static unsigned int RETURN_ARRAYS_PTR;
