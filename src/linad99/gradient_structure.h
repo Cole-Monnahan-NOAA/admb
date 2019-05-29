@@ -326,11 +326,13 @@ size_t totalbytes();
 grad_stack* GRAD_STACK1;
 dlist GRAD_LIST;
 
+dvariable* get_RETURN_PTR();
+
    static unsigned int RETURN_ARRAYS_SIZE;
    //static int RETURN_INDEX;
-   static dvariable *RETURN_PTR;
-   static dvariable *MIN_RETURN;
-   static dvariable *MAX_RETURN;
+dvariable* RETURN_PTR;
+dvariable* MIN_RETURN;
+dvariable* MAX_RETURN;
 
 arr_list ARR_LIST1;
 

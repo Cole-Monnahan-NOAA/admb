@@ -82,11 +82,6 @@ unsigned int gradient_structure::RETURN_ARRAYS_PTR;
 dvariable ** gradient_structure::RETURN_PTR_CONTAINER = NULL;
 unsigned int gradient_structure::RETURN_ARRAYS_SIZE = 70;
 int gradient_structure::instances = 0;
-//int gradient_structure::RETURN_INDEX = 0;
-//dvariable * gradient_structure::FRETURN = NULL;
-dvariable * gradient_structure::MAX_RETURN = NULL;
-dvariable * gradient_structure::MIN_RETURN = NULL;
-dvariable * gradient_structure::RETURN_PTR = NULL;
 #ifdef __BORLANDC__
 long int gradient_structure::GRADSTACK_BUFFER_SIZE = 4000000L;
 long int gradient_structure::CMPDIF_BUFFER_SIZE=140000000L;
@@ -112,6 +107,13 @@ humungous_pointer gradient_structure::ARRAY_MEMBLOCK_SAVE;
 long int farptr_tolong(void *) ;
 #endif
 void memory_allocate_error(const char * s, void * ptr);
+
+dvariable* gradient_structure::get_RETURN_PTR()
+{
+  if (++RETURN_PTR > MAX_RETURN)
+    RETURN_PTR = gradient_structure::MIN_RETURN;
+  return RETURN_PTR;
+}
 
 /**
  * Description not yet available.
@@ -358,8 +360,9 @@ void RETURN_ARRAYS_INCREMENT(void)
 #if defined(THREAD_SAFE)
   pthread_mutex_lock(&mutex_return_arrays);
 #endif
+  gradient_structure* gs = gradient_structure::get();
   gradient_structure::RETURN_PTR_CONTAINER[
-    gradient_structure::RETURN_ARRAYS_PTR]=gradient_structure::RETURN_PTR;
+    gradient_structure::RETURN_ARRAYS_PTR]=gs->RETURN_PTR;
   if (++gradient_structure::RETURN_ARRAYS_PTR ==
     gradient_structure::NUM_RETURN_ARRAYS)
   {
@@ -368,12 +371,12 @@ void RETURN_ARRAYS_INCREMENT(void)
     cerr << " which is not matched by a RETURN_ARRAYS_DECREMENT()\n";
     ad_exit(24);
   }
-  gradient_structure::MIN_RETURN =
-    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
-  gradient_structure::MAX_RETURN =
-    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
+  gs->MIN_RETURN =
+    gs->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
+  gs->MAX_RETURN =
+    gs->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
     gradient_structure::RETURN_ARRAYS_SIZE-1;
-  gradient_structure::RETURN_PTR = gradient_structure::MIN_RETURN;
+  gs->RETURN_PTR = gs->MIN_RETURN;
 #if defined(THREAD_SAFE)
   pthread_mutex_unlock(&mutex_return_arrays);
 #endif
@@ -399,12 +402,13 @@ void RETURN_ARRAYS_DECREMENT(void)
   }
   --gradient_structure::RETURN_ARRAYS_PTR;
 
-  gradient_structure::MIN_RETURN =
-    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
-  gradient_structure::MAX_RETURN =
-    gradient_structure::get()->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
-    gradient_structure::get()->RETURN_ARRAYS_SIZE-1;
-  gradient_structure::RETURN_PTR =
+  gradient_structure* gs = gradient_structure::get();
+  gs->MIN_RETURN =
+    gs->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR];
+  gs->MAX_RETURN =
+    gs->RETURN_ARRAYS[gradient_structure::RETURN_ARRAYS_PTR]+
+    gs->RETURN_ARRAYS_SIZE-1;
+  gs->RETURN_PTR =
     gradient_structure::RETURN_PTR_CONTAINER[
       gradient_structure::RETURN_ARRAYS_PTR];
 #if defined(THREAD_SAFE)
