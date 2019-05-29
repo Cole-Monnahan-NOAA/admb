@@ -253,13 +253,8 @@ dvariable** RETURN_ARRAYS;
       return (double*)ARRAY_MEMBLOCK_BASE;
    }
  private:
-#ifdef __BORLANDC__
-   static long int CMPDIF_BUFFER_SIZE;
-   static long int GRADSTACK_BUFFER_SIZE;
-#else
    static size_t CMPDIF_BUFFER_SIZE;
    static size_t GRADSTACK_BUFFER_SIZE;
-#endif
    static int save_var_file_flag;
    static int save_var_flag;
 
@@ -276,11 +271,6 @@ dependent_variables_information* DEPVARS_INFO;
    int x;
 
  public:
-   // exception class
-   class arrmemblerr
-   {
-   };
-
    static int Hybrid_bounded_flag;
    static double *hessian_ptr;
    static long int get_USE_FOR_HESSIAN()
@@ -301,27 +291,12 @@ void save_arrays();
 void restore_arrays();
 size_t totalbytes();
 
-   friend dvector restore_dvar_vector_value(
-     const dvar_vector_position& tmp);
-   friend void cleanup_temporary_files();
-   //friend dvector restore_dvar_vector_value(const dvar_vector_position&);
-   friend dvector restore_dvar_vector_derivatives(void);
-   friend dmatrix restore_dvar_matrix_derivatives(void);
-   friend dmatrix restore_dvar_matrix_value(void);
-   //friend dmatrix restore_derivatives(void);
    friend double_and_int *arr_new(unsigned int sz);//js
-   friend void arr_free(double_and_int *);
    friend void RETURN_ARRAYS_DECREMENT(void);
    friend void RETURN_ARRAYS_INCREMENT(void);
    friend void make_indvar_list(const dvar_vector & t);
-   //friend void gradcalc( int , double *);
    friend void gradcalc(int nvar, const dvector & g);
-   friend void slave_gradcalc(void);
    friend void funnel_gradcalc(void);
-   friend void allocate_dvariable_space(void);
-   friend void wide_funnel_gradcalc(void);
-   friend dvar_vector_position restore_dvar_vector_position(void);
-   friend double_and_int *gradnew();
 
 grad_stack* GRAD_STACK1;
 dlist GRAD_LIST;
@@ -341,11 +316,6 @@ void jacobcalc(int nvar, const dmatrix& jac);
 void jacobcalc(int nvar, const ofstream& jac);
 void jacobcalc(int nvar, const uostream& jac);
 
-   friend void default_evaluation(void);
-   //access functions
-
-   friend class DF_FILE;
-
 DF_FILE* get_fp() { return fp; }
 
    static void set_NUM_RETURN_ARRAYS(unsigned int i);
@@ -355,22 +325,12 @@ DF_FILE* get_fp() { return fp; }
 #endif
    static void set_YES_SAVE_VARIABLES_VALUES();
    static void set_NO_SAVE_VARIABLES_VALUES();
-   //static int _GRADFILE_PTR; // should be int gradfile_handle;
-   //static int _GRADFILE_PTR1; // should be int gradfile_handle;
-   //static int _GRADFILE_PTR2; // should be int gradfile_handle;
-   //static int _VARSSAV_PTR; // should be int gradfile_handle;
    static void set_NUM_DEPENDENT_VARIABLES(int i);
    static void set_RETURN_ARRAYS_SIZE(unsigned int i);
    static void set_ARRAY_MEMBLOCK_SIZE(unsigned long i);
-#ifdef __BORLANDC__
-   static void set_CMPDIF_BUFFER_SIZE(long int i);
-   static void set_GRADSTACK_BUFFER_SIZE(long int i);
-   static void set_GRADSTACK_BUFFER_BYTES(long int i);
-#else
    static void set_CMPDIF_BUFFER_SIZE(const size_t i);
    static void set_GRADSTACK_BUFFER_SIZE(const size_t i);
    static void set_GRADSTACK_BUFFER_BYTES(const size_t i);
-#endif
    static void set_MAX_DLINKS(int i);
    static size_t NUM_GRADSTACK_BYTES_WRITTEN(void);
    static unsigned int get_MAX_DLINKS() { return MAX_DLINKS; }
