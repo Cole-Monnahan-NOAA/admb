@@ -303,12 +303,6 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
    const size_t adjustment = (8 -((size_t)ARRAY_MEMBLOCK_BASE.ptr) % 8) % 8;
    ARRAY_MEMBLOCK_BASE.adjust(adjustment);
 
-  _instance = this;
-  {
-    GRAD_STACK1 = new grad_stack;
-    memory_allocate_error("GRAD_STACK1",GRAD_STACK1);
-    gradient_structure::hessian_ptr = (double*)GRAD_STACK1->true_ptr_first;
-  }
   {
     int nopt=0;
     int on=0;
@@ -317,6 +311,12 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
       cerr << "Error: Command line option \"-mno\" is no longer used.\n";
       ad_exit(1);
     }
+  }
+  _instance = this;
+  {
+    GRAD_STACK1 = new grad_stack;
+    memory_allocate_error("GRAD_STACK1",GRAD_STACK1);
+    gradient_structure::hessian_ptr = (double*)GRAD_STACK1->true_ptr_first;
   }
   {
     RETURN_ARRAYS = new dvariable*[NUM_RETURN_ARRAYS];
