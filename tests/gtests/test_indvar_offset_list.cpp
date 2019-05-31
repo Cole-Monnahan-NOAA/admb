@@ -57,4 +57,5 @@ TEST_F(test_indvar_offset_list, option_mno)
   ASSERT_ANY_THROW({
     gradient_structure gs;
   });
+  ASSERT_TRUE(gradient_structure::get() == NULL);
 }
