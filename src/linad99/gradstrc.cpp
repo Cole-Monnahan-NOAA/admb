@@ -75,8 +75,6 @@ int gradient_structure::NUM_DEPENDENT_VARIABLES = 2000;
   int gradient_structure::no_derivatives = 0;
 #endif
 unsigned long int gradient_structure::max_last_offset = 0;
-size_t gradient_structure::TOTAL_BYTES = 0;
-size_t gradient_structure::PREVIOUS_TOTAL_BYTES = 0;
 long int gradient_structure::USE_FOR_HESSIAN = 0;
 unsigned int gradient_structure::RETURN_ARRAYS_PTR;
 dvariable ** gradient_structure::RETURN_PTR_CONTAINER = NULL;
@@ -225,7 +223,7 @@ void allocate_dvariable_space()
 Constructor
 */
 gradient_structure::gradient_structure(long int _size):
-  x(0)
+  TOTAL_BYTES(0), PREVIOUS_TOTAL_BYTES(0), x(0)
 {
 #ifndef OPT_LIB
   assert(_size > 0);

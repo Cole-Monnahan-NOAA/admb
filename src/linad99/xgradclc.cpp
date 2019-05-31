@@ -82,14 +82,14 @@ void funnel_gradcalc(void)
        return;
      }
 #  endif
-  gradient_structure::TOTAL_BYTES = 0;
-  gradient_structure::PREVIOUS_TOTAL_BYTES=0;
+  gradient_structure* gs = gradient_structure::get();
+  gs->TOTAL_BYTES = 0;
+  gs->PREVIOUS_TOTAL_BYTES=0;
   if(!gradient_structure::instances)
   {
     return;
   }
 
-  gradient_structure* gs = gradient_structure::get();
   grad_stack* GRAD_STACK1 = gs->GRAD_STACK1;
 
   GRAD_STACK1->_GRADFILE_PTR = GRAD_STACK1->gradfile_handle();

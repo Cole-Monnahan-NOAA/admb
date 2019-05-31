@@ -242,8 +242,8 @@ class gradient_structure
 dvariable** RETURN_ARRAYS;
    static unsigned int RETURN_ARRAYS_PTR;
    static dvariable **RETURN_PTR_CONTAINER;
-   static size_t TOTAL_BYTES;
-   static size_t PREVIOUS_TOTAL_BYTES;
+size_t TOTAL_BYTES;
+size_t PREVIOUS_TOTAL_BYTES;
    static unsigned long ARRAY_MEMBLOCK_SIZE;//js
    static humungous_pointer ARRAY_MEMBLOCK_BASE;
    static humungous_pointer ARRAY_MEMBLOCK_SAVE;
@@ -332,7 +332,7 @@ DF_FILE* get_fp() { return fp; }
    static void set_GRADSTACK_BUFFER_SIZE(const size_t i);
    static void set_GRADSTACK_BUFFER_BYTES(const size_t i);
    static void set_MAX_DLINKS(int i);
-   static size_t NUM_GRADSTACK_BYTES_WRITTEN(void);
+size_t NUM_GRADSTACK_BYTES_WRITTEN();
    static unsigned int get_MAX_DLINKS() { return MAX_DLINKS; }
 void save_dependent_variable_position(const prevariable&);
    static unsigned long int max_last_offset;
