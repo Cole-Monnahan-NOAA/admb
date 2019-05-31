@@ -91,7 +91,6 @@ size_t gradient_structure::CMPDIF_BUFFER_SIZE=140000000L;
 #endif
 
 int gradient_structure::save_var_flag=0;
-int gradient_structure::save_var_file_flag=0;
 
 unsigned long gradient_structure::ARRAY_MEMBLOCK_SIZE = 0L; //js
 unsigned int gradient_structure::MAX_DLINKS = 5000;
@@ -111,7 +110,7 @@ void memory_allocate_error(const char * s, void * ptr);
 dvariable* gradient_structure::get_RETURN_PTR()
 {
   if (++RETURN_PTR > MAX_RETURN)
-    RETURN_PTR = gradient_structure::MIN_RETURN;
+    RETURN_PTR = MIN_RETURN;
   return RETURN_PTR;
 }
 
