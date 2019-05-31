@@ -140,7 +140,7 @@ void gradcalc(int nvar, const dvector& _g)
 
   gradient_structure::get()->GRAD_LIST.initialize();
 
-  memset(gradient_structure::ARRAY_MEMBLOCK_BASE, 0,
+  memset(gradient_structure::get()->ARRAY_MEMBLOCK_BASE, 0,
     gradient_structure::get()->ARR_LIST1.get_max_last_offset());
 
   *GRAD_STACK1->ptr->dep_addr = 1;

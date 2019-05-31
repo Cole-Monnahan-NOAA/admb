@@ -122,7 +122,7 @@ double_and_int * arr_new(unsigned int sz)
         // remove tmp from the free list
         arr_free_remove(tmp);
 
-        temp_ptr = gradient_structure::ARRAY_MEMBLOCK_BASE + tmp->offset;
+        temp_ptr = gradient_structure::get()->ARRAY_MEMBLOCK_BASE + tmp->offset;
 
         //put the address tmp into the location pointed to by temp_ptr
         (* (arr_link **) (temp_ptr)) = tmp;
@@ -158,7 +158,7 @@ double_and_int * arr_new(unsigned int sz)
         tmp->offset+=bytes_needed;
         tmp->size-=bytes_needed;
 
-        temp_ptr = gradient_structure::ARRAY_MEMBLOCK_BASE + tmp1->offset;
+        temp_ptr = gradient_structure::get()->ARRAY_MEMBLOCK_BASE + tmp1->offset;
 
    //put the address pointed to by tmp1 into the location pointed to by temp_ptr
         (*(arr_link**)(temp_ptr)) = tmp1;
@@ -222,7 +222,7 @@ double_and_int * arr_new(unsigned int sz)
 
   tmp->size = bytes_needed;
 
-  temp_ptr = gradient_structure::ARRAY_MEMBLOCK_BASE + tmp->offset;
+  temp_ptr = gradient_structure::get()->ARRAY_MEMBLOCK_BASE + tmp->offset;
 
   (*(arr_link **) (temp_ptr )) = tmp; //put the address
                                    // tmp into the location pointed to

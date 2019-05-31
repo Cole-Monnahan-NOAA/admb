@@ -94,10 +94,8 @@ unsigned int gradient_structure::MAX_DLINKS = 5000;
 // note: ARRAY_MEMBLOCK stuff is set by tpl2cpp for historical reasons
 //       those settings could be moved into this file in the future
 //       - Ian Taylor 5/3/2012
-
 //unsigned long int gradient_structure::ARRAY_MEMBLOCK_BASE = 0L;
-humungous_pointer gradient_structure::ARRAY_MEMBLOCK_BASE;
-humungous_pointer gradient_structure::ARRAY_MEMBLOCK_SAVE;
+
 #ifdef DIAG
 long int farptr_tolong(void *) ;
 #endif
