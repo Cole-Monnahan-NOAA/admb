@@ -240,7 +240,7 @@ class gradient_structure
    static long int USE_FOR_HESSIAN;
    static unsigned int NUM_RETURN_ARRAYS;
 dvariable** RETURN_ARRAYS;
-   static unsigned int RETURN_ARRAYS_PTR;
+unsigned int RETURN_ARRAYS_PTR;
    static dvariable **RETURN_PTR_CONTAINER;
 size_t TOTAL_BYTES;
 size_t PREVIOUS_TOTAL_BYTES;
