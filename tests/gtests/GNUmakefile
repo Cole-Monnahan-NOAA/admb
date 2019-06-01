@@ -131,10 +131,10 @@ GTESTS_DEV=\
  test_arr_list.cpp\
  test_grad_list.cpp\
  test_indvar_offset_list.cpp\
+ test_return_arrays.cpp\
  main.cpp
 
 GTESTS_DEV2=\
- test_return_arrays.cpp\
  test_grad_stack.cpp\
  test_df_file.cpp\
  test_dlist.cpp\
