@@ -45,6 +45,7 @@ TEST_F(test_indvar_offset_list, constructor)
   ASSERT_TRUE(list.get_address(0) == &d1);
 }
 */
+/*
 TEST_F(test_indvar_offset_list, option_mno)
 {
   ad_exit=&test_ad_exit;
@@ -58,4 +59,8 @@ TEST_F(test_indvar_offset_list, option_mno)
     gradient_structure gs;
   });
   ASSERT_TRUE(gradient_structure::get() == NULL);
+  ad_comm::argc = 0;
+  delete [] ad_comm::argv;
+  ad_comm::argv = NULL;
 }
+*/

@@ -118,6 +118,7 @@ GTESTS_ALL=\
  test_valarray.cpp\
  test_vector.cpp\
  test_xpools.cpp\
+ test_dfpool.cpp\
  main.cpp
 
 GTESTS_NEW=\
@@ -126,12 +127,12 @@ GTESTS_NEW=\
  main.cpp
 
 GTESTS_DEV=\
- test_dfpool.cpp\
  test_arr_link.cpp\
  test_arr_list.cpp\
  test_grad_list.cpp\
  test_indvar_offset_list.cpp\
  test_return_arrays.cpp\
+ test_async_gradient_structure.cpp\
  main.cpp
 
 GTESTS_DEV2=\

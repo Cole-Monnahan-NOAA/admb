@@ -1,3 +1,5 @@
+#if defined(USE_VECTOR_SHAPE_POOL)
+
 #include <gtest/gtest.h>
 #include "fvar.hpp"
 
@@ -182,3 +184,4 @@ TEST_F(test_dfpool, dvar_vector1to4)
 
   dvar_vector v(1, 4); 
 }
+#endif

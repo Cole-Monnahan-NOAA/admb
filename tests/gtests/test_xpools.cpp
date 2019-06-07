@@ -1,3 +1,5 @@
+#if defined(USE_VECTOR_SHAPE_POOL)
+
 #include <gtest/gtest.h>
 #include <fvar.hpp>
 
@@ -9,3 +11,5 @@ TEST_F(test_xpools, sizes)
   ASSERT_EQ(vector_shapex::get_xpool().size, sizeof(vector_shapex));
   ASSERT_EQ(arr_link::get_xpool().size, sizeof(arr_link));
 }
+
+#endif

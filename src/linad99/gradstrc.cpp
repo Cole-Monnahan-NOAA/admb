@@ -61,7 +61,7 @@ extern "C"{
   }
 }
 
-gradient_structure* gradient_structure::_instance = NULL;
+__thread gradient_structure* gradient_structure::_instance = NULL;
 
 // *************************************************************
 // *************************************************************
@@ -227,13 +227,7 @@ gradient_structure::gradient_structure(long int _size):
   atexit(cleanup_temporary_files);
   fill_ad_random_part();
 
-  if (instances++ > 0)
-  {
-    cerr << "More than one gradient_structure object has been declared.\n"
-         << "  Only one gradient_structure object can exist. Check the scope\n"
-         << "  of the objects declared.\n";
-    ad_exit(1);
-  }
+  ++instances;
 
   //Should be a multiple of sizeof(double_and_int)
   const long int remainder = _size % sizeof(double_and_int);

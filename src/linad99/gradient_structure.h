@@ -226,7 +226,7 @@ public:
  */
 class gradient_structure
 {
-  static gradient_structure* _instance;
+  static __thread gradient_structure* _instance;
 
   DF_FILE *fp;
  public:
