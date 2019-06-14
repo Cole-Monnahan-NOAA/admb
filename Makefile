@@ -1,5 +1,5 @@
 #default targets depending on compiler
-#DEBUG=yes
+DEBUG=yes
 
 dist:
 	$(MAKE) $(CXX)-dist DEBUG=$(DEBUG)
