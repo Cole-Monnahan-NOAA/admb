@@ -43,6 +43,7 @@
 
 #include <vector>
 #include <fstream>
+#include <atomic>
 using std::ofstream;
 
 class dvariable;
@@ -227,6 +228,7 @@ public:
 class gradient_structure
 {
   static __thread gradient_structure* _instance;
+  gradient_structure* from_instance;
 
   DF_FILE *fp;
  public:
@@ -235,6 +237,7 @@ class gradient_structure
 #endif
 
   static gradient_structure* get() { return _instance; }
+  static int get_instances() { return instances.load(); }
 
  private:
    static long int USE_FOR_HESSIAN;
@@ -267,7 +270,7 @@ dependent_variables_information* DEPVARS_INFO;
    // member functions can call it
    static void check_set_error(const char *variable_name);
 
-   static int instances;
+   static std::atomic<int> instances;
    int x;
 
  public:
@@ -282,8 +285,15 @@ dependent_variables_information* DEPVARS_INFO;
       USE_FOR_HESSIAN = i;
    }
    friend class dfsdmat;
-   gradient_structure(long int size = 100000L);// constructor
-   ~gradient_structure(void);// destructor
+
+gradient_structure(): gradient_structure(100000L) {}
+gradient_structure(long int size);
+gradient_structure(const gradient_structure&);
+gradient_structure(gradient_structure&&) = delete;
+~gradient_structure();
+
+gradient_structure& operator=(gradient_structure&) = delete;
+gradient_structure& operator=(gradient_structure&&) = delete;
 
 void save_variables();
 void restore_variables();
@@ -337,8 +347,11 @@ size_t NUM_GRADSTACK_BYTES_WRITTEN();
 void save_dependent_variable_position(const prevariable&);
    static unsigned long int max_last_offset;
 
+  static size_t get_GRADSTACK_BUFFER_SIZE() { return GRADSTACK_BUFFER_SIZE; }
+
    /// Deprecated
    static void set_MAX_NVAR_OFFSET(unsigned int i);
+
 
    friend class dlist;
    friend class grad_stack;

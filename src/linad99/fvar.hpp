@@ -920,12 +920,22 @@ class grad_stack
   size_t total() const
   {
     size_t count = 0;
-    for (grad_stack_entry* current = ptr_first; current != ptr; ++current)
+    for (grad_stack_entry* p = ptr_first; p != ptr; ++p)
     {
       ++count;
     }
     return count;
   }
+  size_t totalempty() const
+  {
+    size_t count = 0;
+    for (grad_stack_entry* p = ptr; p <= ptr_last; ++p)
+    {
+      ++count;
+    }
+    return count;
+  }
+
    friend class gradient_structure;
    //int get_ngradfiles();
 };

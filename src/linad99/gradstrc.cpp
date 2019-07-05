@@ -77,7 +77,7 @@ int gradient_structure::NUM_DEPENDENT_VARIABLES = 2000;
 unsigned long int gradient_structure::max_last_offset = 0;
 long int gradient_structure::USE_FOR_HESSIAN = 0;
 unsigned int gradient_structure::RETURN_ARRAYS_SIZE = 70;
-int gradient_structure::instances = 0;
+std::atomic<int> gradient_structure::instances(0);
 #ifdef __BORLANDC__
 long int gradient_structure::GRADSTACK_BUFFER_SIZE = 4000000L;
 long int gradient_structure::CMPDIF_BUFFER_SIZE=140000000L;
@@ -228,6 +228,8 @@ gradient_structure::gradient_structure(long int _size):
   fill_ad_random_part();
 
   ++instances;
+  from_instance = NULL;
+  _instance = this;
 
   //Should be a multiple of sizeof(double_and_int)
   const long int remainder = _size % sizeof(double_and_int);
@@ -300,7 +302,6 @@ cerr << "Trying to allocate to a non NULL pointer in gradient structure \n";
       ad_exit(1);
     }
   }
-  _instance = this;
   {
     GRAD_STACK1 = new grad_stack;
     memory_allocate_error("GRAD_STACK1",GRAD_STACK1);
@@ -390,16 +391,44 @@ void RETURN_ARRAYS_DECREMENT(void)
 #endif
 }
 /**
+Copy Constructor
+*/
+gradient_structure::gradient_structure(const gradient_structure& from)
+{
+  ++instances;
+  from_instance = from.get();
+  _instance = this;
+
+  RETURN_ARRAYS = NULL;
+
+  GRAD_STACK1 = new grad_stack();
+
+  ARRAY_MEMBLOCK_BASE = NULL;
+  if ((ARRAY_MEMBLOCK_BASE = (void*)malloc(ARRAY_MEMBLOCK_SIZE)) == 0)
+  {
+    cerr << "insufficient memory to allocate space for ARRAY_MEMBLOCKa\n";
+    ad_exit(1);
+  }
+
+  DEPVARS_INFO = NULL;
+  fp = new DF_FILE(CMPDIF_BUFFER_SIZE);
+}
+/**
 Destructor
 */
 gradient_structure::~gradient_structure()
 {
-  if (RETURN_ARRAYS == NULL)
+  instances--;
+  if (from_instance != NULL)
   {
-    null_ptr_err_message();
-    ad_exit(1);
+    _instance = from_instance;
+    from_instance = NULL;
   }
   else
+  {
+    _instance = NULL;
+  }
+  if (RETURN_ARRAYS != NULL)
   {
      for (unsigned int i = 0; i < NUM_RETURN_ARRAYS; ++i)
      {
@@ -411,48 +440,25 @@ gradient_structure::~gradient_structure()
      delete [] RETURN_PTR_CONTAINER;
      RETURN_PTR_CONTAINER = NULL;
   }
-  if (GRAD_STACK1 == NULL)
-  {
-    null_ptr_err_message();
-    ad_exit(1);
-  }
-  else
+  if (GRAD_STACK1 != NULL)
   {
     delete GRAD_STACK1;
     GRAD_STACK1 = NULL;
   }
-  if (ARRAY_MEMBLOCK_BASE == NULL)
-  {
-    cerr << "Trying to farfree a NULL pointer in ~gradient_structure\n";
-    ad_exit(1);
-  }
-  else
+  if (ARRAY_MEMBLOCK_BASE != NULL)
   {
     ARRAY_MEMBLOCK_BASE.free();
   }
-
-  instances--;
-
-  if (DEPVARS_INFO==NULL)
+  if (DEPVARS_INFO != NULL)
   {
-    null_ptr_err_message();
-    ad_exit(1);
+    delete DEPVARS_INFO;
+    DEPVARS_INFO = NULL;
   }
-
-  delete DEPVARS_INFO;
-  DEPVARS_INFO=NULL;
-
-  if (fp == NULL)
+  if (fp != NULL)
   {
-    cerr << "Trying to close stream referenced by a NULL pointer\n"
-            " in ~gradient_structure\n";
-    ad_exit(1);
+    delete fp;
+    fp = NULL;
   }
-
-  delete fp;
-  fp = NULL;
-
-  _instance = NULL;
 }
 
 /**
