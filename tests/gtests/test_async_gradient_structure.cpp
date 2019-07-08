@@ -347,3 +347,114 @@ TEST_F(test_async_gradient_structure, copy)
   ASSERT_EQ(gs.GRAD_STACK1->total(), 0);
   ASSERT_EQ(gs.GRAD_STACK1->totalempty(), gradient_structure::get_GRADSTACK_BUFFER_SIZE());
 }
+TEST_F(test_async_gradient_structure, ARR_LIST1)
+{
+  ASSERT_EQ(gradient_structure::get_instances(), 0);
+  gradient_structure gs;
+  ASSERT_TRUE(gradient_structure::get() == &gs);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last() == NULL);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last_offset() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_number_arr_links() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_max_last_offset() == 0);
+  asyncs3(10, gs, []()
+  {
+    gradient_structure* gsptr = gradient_structure::get();
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last() == NULL);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last_offset() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_number_arr_links() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_max_last_offset() == 0);
+  });
+  ASSERT_EQ(gradient_structure::get_instances(), 1);
+  ASSERT_TRUE(gradient_structure::get() == &gs);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last() == NULL);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last_offset() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_number_arr_links() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_max_last_offset() == 0);
+}
+TEST_F(test_async_gradient_structure, arr_new_0)
+{
+  ASSERT_EQ(gradient_structure::get_instances(), 0);
+  gradient_structure gs;
+  ASSERT_TRUE(gradient_structure::get() == &gs);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last() == NULL);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last_offset() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_number_arr_links() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_max_last_offset() == 0);
+  double* ptr_amb = gs.get_ARRAY_MEMBLOCK_BASE();
+  asyncs3(10, gs, []()
+  {
+    gradient_structure* gsptr = gradient_structure::get();
+    double* ptr_amb = gsptr->get_ARRAY_MEMBLOCK_BASE();
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last() == NULL);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last_offset() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_number_arr_links() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_max_last_offset() == 0);
+
+    double_and_int* arr = arr_new(0);
+    arr_link* ptr = *(arr_link**)arr;
+
+    ASSERT_TRUE(static_cast<void*>(arr) == static_cast<void*>(ptr_amb));
+
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last() == ptr);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last_offset() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_number_arr_links() == 1);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_max_last_offset() == 0);
+
+    ASSERT_TRUE(ptr->get_prev() == NULL);
+    ASSERT_TRUE(ptr->get_next() == NULL);
+    ASSERT_TRUE(ptr->get_size() == 0);
+    ASSERT_TRUE(ptr->get_offset() == 0);
+    ASSERT_TRUE(ptr->get_status() == 1);
+
+    arr_free(arr);
+
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last() == NULL);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last_offset() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_number_arr_links() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_max_last_offset() == 0);
+  });
+  ASSERT_EQ(gradient_structure::get_instances(), 1);
+  ASSERT_TRUE(gradient_structure::get() == &gs);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last() == NULL);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last_offset() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_number_arr_links() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_max_last_offset() == 0);
+  ASSERT_TRUE(gs.get_ARRAY_MEMBLOCK_BASE() == ptr_amb);
+}
+TEST_F(test_async_gradient_structure, arr_new_1)
+{
+  ASSERT_EQ(gradient_structure::get_instances(), 0);
+  gradient_structure gs;
+  ASSERT_TRUE(gradient_structure::get() == &gs);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last() == NULL);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last_offset() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_number_arr_links() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_max_last_offset() == 0);
+  double* ptr_amb = gs.get_ARRAY_MEMBLOCK_BASE();
+  asyncs3(10, gs, []()
+  {
+    gradient_structure* gsptr = gradient_structure::get();
+    double* ptr_amb = gsptr->get_ARRAY_MEMBLOCK_BASE();
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last() == NULL);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_last_offset() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_number_arr_links() == 0);
+    ASSERT_TRUE(gsptr->ARR_LIST1.get_max_last_offset() == 0);
+
+    double_and_int* arr = arr_new(1);
+    ASSERT_TRUE(static_cast<void*>(arr) == static_cast<void*>(ptr_amb));
+
+    arr_link* ptr = *(arr_link**)arr;
+    ASSERT_TRUE(ptr->get_prev() == NULL);
+    ASSERT_TRUE(ptr->get_next() == NULL);
+    ASSERT_TRUE(ptr->get_size() == sizeof(double_and_int));
+    ASSERT_TRUE(ptr->get_offset() == 0);
+    ASSERT_TRUE(ptr->get_status() == 1);
+  });
+  ASSERT_EQ(gradient_structure::get_instances(), 1);
+  ASSERT_TRUE(gradient_structure::get() == &gs);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last() == NULL);
+  ASSERT_TRUE(gs.ARR_LIST1.get_last_offset() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_number_arr_links() == 0);
+  ASSERT_TRUE(gs.ARR_LIST1.get_max_last_offset() == 0);
+  ASSERT_TRUE(gs.get_ARRAY_MEMBLOCK_BASE() == ptr_amb);
+}
