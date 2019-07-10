@@ -102,7 +102,7 @@ humungous_pointer::operator double_and_int* ()
  * Description not yet available.
  * \param
  */
-humungous_pointer::operator double* ()
+humungous_pointer::operator double* () const
 {
   return (double*)ptr;
 }

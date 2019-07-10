@@ -50,7 +50,7 @@ TEST_F(test_arr_link, allocate)
   p += v.indexmin();
   ASSERT_TRUE(*(arr_link**)p == v.link_ptr);
 
-  double* ptr = gradient_structure::get_ARRAY_MEMBLOCK_BASE();
+  double* ptr = gradient_structure::get()->get_ARRAY_MEMBLOCK_BASE();
   ASSERT_TRUE(ptr == (double*)v.shape->trueptr);
 
   v.initialize();

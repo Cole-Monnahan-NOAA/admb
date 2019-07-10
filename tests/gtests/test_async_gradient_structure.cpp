@@ -38,12 +38,19 @@ void asyncs2(const int size, std::function<void(double)> f)
 }
 void asyncs3(const int size, gradient_structure& gs, std::function<void(void)> f)
 {
+  gradient_structure* p1 = gs.get();
+  ASSERT_TRUE(p1 == gradient_structure::get());
   std::vector<std::future<void>> futures;
   for(int i = 0; i < size; ++i)
   {
-    futures.push_back(std::async([&f, &gs]()
+    futures.push_back(std::async([&f, p1]()
     {
-      gradient_structure copy(gs);
+      gradient_structure copy(*p1);
+      gradient_structure* p2 = gradient_structure::get();
+      ASSERT_TRUE(p2 == &copy);
+      ASSERT_TRUE(p1 != p2);
+      ASSERT_TRUE(p2->get_ARRAY_MEMBLOCK_BASE() != NULL);
+      ASSERT_TRUE(p1->get_ARRAY_MEMBLOCK_BASE() != NULL);
       f();
     }));
   }
@@ -313,6 +320,111 @@ TEST_F(test_async_gradient_structure, copyconstructor_gradstack2)
   dvariable v;
   v = 5.0;
   ASSERT_EQ(gradient_structure::get_instances(), 1);
+}
+TEST_F(test_async_gradient_structure, copy_amb)
+{
+  gradient_structure gs;
+  gradient_structure* p1 = gradient_structure::get();
+  ASSERT_TRUE(p1 == &gs);
+  double* dptr1 = p1->get_ARRAY_MEMBLOCK_BASE();
+  ASSERT_TRUE(dptr1 != NULL);
+
+  gradient_structure copy(gs);
+  gradient_structure* p2 = gradient_structure::get();
+  ASSERT_TRUE(p2 == &copy);
+  ASSERT_TRUE(p2->get_ARRAY_MEMBLOCK_BASE() != NULL);
+  double* dptr2 = p2->get_ARRAY_MEMBLOCK_BASE();
+  ASSERT_TRUE(dptr2 != NULL);
+
+  ASSERT_TRUE(p1 != p2);
+  ASSERT_TRUE(dptr1 != dptr2);
+}
+TEST_F(test_async_gradient_structure, copy_amb_lambda)
+{
+  gradient_structure gs;
+  gradient_structure* p1 = gradient_structure::get();
+  ASSERT_TRUE(p1 == &gs);
+  double* dptr1 = p1->get_ARRAY_MEMBLOCK_BASE();
+  ASSERT_TRUE(dptr1 != NULL);
+
+  std::function<void(void)> f = [p1, dptr1]()
+  {
+    gradient_structure copy(*p1);
+    gradient_structure* p2 = gradient_structure::get();
+    ASSERT_TRUE(p2 == &copy);
+    ASSERT_TRUE(p2->get_ARRAY_MEMBLOCK_BASE() != NULL);
+    double* dptr2 = p2->get_ARRAY_MEMBLOCK_BASE();
+    ASSERT_TRUE(dptr2 != NULL);
+
+    ASSERT_TRUE(p1 != p2);
+    ASSERT_TRUE(dptr1 != dptr2);
+  };
+
+  f();
+}
+TEST_F(test_async_gradient_structure, copy_amb_lambda_async)
+{
+  gradient_structure gs;
+  gradient_structure* p1 = gradient_structure::get();
+  ASSERT_TRUE(p1 == &gs);
+  double* dptr1 = p1->get_ARRAY_MEMBLOCK_BASE();
+  ASSERT_TRUE(dptr1 != NULL);
+
+  std::function<void(void)> f = [p1, dptr1]()
+  {
+    gradient_structure copy(*p1);
+    gradient_structure* p2 = gradient_structure::get();
+    ASSERT_TRUE(p2 == &copy);
+    ASSERT_TRUE(p2->get_ARRAY_MEMBLOCK_BASE() != NULL);
+    double* dptr2 = p2->get_ARRAY_MEMBLOCK_BASE();
+    ASSERT_TRUE(dptr2 != NULL);
+
+    ASSERT_TRUE(p1 != p2);
+    ASSERT_TRUE(dptr1 != dptr2);
+  };
+
+  std::vector<std::future<void>> futures;
+  for(int i = 0; i < 10; ++i)
+  {
+    futures.push_back(std::async(f));
+  }
+  for(auto& element: futures)
+  {
+    element.get();
+  }
+}
+TEST_F(test_async_gradient_structure, copy_amb_lambda_async2)
+{
+  gradient_structure gs;
+  gradient_structure* p1 = gradient_structure::get();
+  ASSERT_TRUE(p1 == &gs);
+  double* dptr1 = p1->get_ARRAY_MEMBLOCK_BASE();
+  ASSERT_TRUE(dptr1 != NULL);
+
+  std::function<void(void)> f = [gs, dptr1]()
+  {
+    gradient_structure copy(gs);
+    gradient_structure* p2 = gradient_structure::get();
+    ASSERT_TRUE(p2 == &copy);
+    ASSERT_TRUE(p2->get_ARRAY_MEMBLOCK_BASE() != NULL);
+    double* dptr2 = p2->get_ARRAY_MEMBLOCK_BASE();
+    ASSERT_TRUE(dptr2 != NULL);
+
+    ASSERT_TRUE(&gs != p2);
+    ASSERT_TRUE(dptr1 != dptr2);
+    ASSERT_TRUE(static_cast<gradient_structure>(gs).get_ARRAY_MEMBLOCK_BASE() != dptr2);
+    ASSERT_TRUE(gs.get_ARRAY_MEMBLOCK_BASE() != dptr2);
+  };
+
+  std::vector<std::future<void>> futures;
+  for(int i = 0; i < 10; ++i)
+  {
+    futures.push_back(std::async(f));
+  }
+  for(auto& element: futures)
+  {
+    element.get();
+  }
 }
 TEST_F(test_async_gradient_structure, copy)
 {

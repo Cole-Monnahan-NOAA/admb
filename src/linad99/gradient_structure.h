@@ -201,7 +201,7 @@ public:
   operator char*();
   operator void*();
   operator double_and_int*();
-  operator double*();
+  operator double*() const;
 };
 
 /**
@@ -251,10 +251,10 @@ size_t PREVIOUS_TOTAL_BYTES;
 humungous_pointer ARRAY_MEMBLOCK_BASE;
 humungous_pointer ARRAY_MEMBLOCK_SAVE;
  public:
-   static double *get_ARRAY_MEMBLOCK_BASE()
-   {
-      return (double*)get()->ARRAY_MEMBLOCK_BASE;
-   }
+  double* get_ARRAY_MEMBLOCK_BASE() const
+  {
+    return (double*)ARRAY_MEMBLOCK_BASE;
+  }
  private:
    static size_t CMPDIF_BUFFER_SIZE;
    static size_t GRADSTACK_BUFFER_SIZE;
