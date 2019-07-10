@@ -308,6 +308,17 @@ TEST_F(test_async_gradient_structure, copyconstructor_gradstack)
   }
   ASSERT_EQ(gradient_structure::get_instances(), 0);
 }
+TEST_F(test_async_gradient_structure, max_last_offset)
+{
+  ASSERT_EQ(gradient_structure::get_instances(), 0);
+  {
+    gradient_structure gs;
+    ASSERT_EQ(gs.max_last_offset, 0);
+    gradient_structure copy(gs);
+    ASSERT_EQ(copy.max_last_offset, 0);
+  }
+  ASSERT_EQ(gradient_structure::get_instances(), 0);
+}
 TEST_F(test_async_gradient_structure, copyconstructor_gradstack2)
 {
   ASSERT_EQ(gradient_structure::get_instances(), 0);
@@ -490,6 +501,12 @@ TEST_F(test_async_gradient_structure, copy_amb_lambda_async2)
   {
     element.get();
   }
+}
+TEST_F(test_async_gradient_structure, arr_new_error)
+{
+  ASSERT_ANY_THROW({
+    arr_new(0);
+  });
 }
 TEST_F(test_async_gradient_structure, copy)
 {

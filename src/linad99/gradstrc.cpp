@@ -74,7 +74,6 @@ int gradient_structure::NUM_DEPENDENT_VARIABLES = 2000;
 #if (defined(NO_DERIVS))
   int gradient_structure::no_derivatives = 0;
 #endif
-unsigned long int gradient_structure::max_last_offset = 0;
 long int gradient_structure::USE_FOR_HESSIAN = 0;
 unsigned int gradient_structure::RETURN_ARRAYS_SIZE = 70;
 std::atomic<int> gradient_structure::instances(0);
@@ -219,7 +218,7 @@ void allocate_dvariable_space()
 Constructor
 */
 gradient_structure::gradient_structure(long int _size):
-  TOTAL_BYTES(0), PREVIOUS_TOTAL_BYTES(0), x(0)
+  TOTAL_BYTES(0), PREVIOUS_TOTAL_BYTES(0), x(0), max_last_offset(0)
 {
 #ifndef OPT_LIB
   assert(_size > 0);
@@ -398,6 +397,8 @@ gradient_structure::gradient_structure(const gradient_structure& from)
   ++instances;
   from_instance = from.get();
   _instance = this;
+
+  max_last_offset = 0;
 
   RETURN_ARRAYS = NULL;
 

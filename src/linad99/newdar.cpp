@@ -82,7 +82,8 @@ void arr_free_add(arr_link * tmp)
  */
 double_and_int * arr_new(unsigned int sz)
 {
-  if (!gradient_structure::instances)
+  gradient_structure* pgs = gradient_structure::get();
+  if (!pgs)
   {
     cerr << "Error -- you are trying to create a dvar_vector object"
             " when there is " << endl << "no object of type"
@@ -95,7 +96,7 @@ double_and_int * arr_new(unsigned int sz)
   // this routine allocated a block of memory of sizeof(double)*sz bytes
   // for the gradients of an array or matrix of prevariables
 
-  arr_list& ARR_LIST1 = gradient_structure::get()->ARR_LIST1;
+  arr_list& ARR_LIST1 = pgs->ARR_LIST1;
   arr_link* tmp = ARR_LIST1.free_last;
 
   unsigned int bytes_needed = sz * (unsigned int)sizeof(double_and_int);
@@ -122,7 +123,7 @@ double_and_int * arr_new(unsigned int sz)
         // remove tmp from the free list
         arr_free_remove(tmp);
 
-        temp_ptr = gradient_structure::get()->ARRAY_MEMBLOCK_BASE + tmp->offset;
+        temp_ptr = pgs->ARRAY_MEMBLOCK_BASE + tmp->offset;
 
         //put the address tmp into the location pointed to by temp_ptr
         (* (arr_link **) (temp_ptr)) = tmp;
@@ -158,7 +159,7 @@ double_and_int * arr_new(unsigned int sz)
         tmp->offset+=bytes_needed;
         tmp->size-=bytes_needed;
 
-        temp_ptr = gradient_structure::get()->ARRAY_MEMBLOCK_BASE + tmp1->offset;
+        temp_ptr = pgs->ARRAY_MEMBLOCK_BASE + tmp1->offset;
 
    //put the address pointed to by tmp1 into the location pointed to by temp_ptr
         (*(arr_link**)(temp_ptr)) = tmp1;
@@ -199,9 +200,9 @@ double_and_int * arr_new(unsigned int sz)
 
   ARR_LIST1.last_offset += bytes_needed;
 
-  if (ARR_LIST1.last_offset > (unsigned int)gradient_structure::max_last_offset)
+  if (ARR_LIST1.last_offset > pgs->max_last_offset)
   {
-    gradient_structure::max_last_offset = ARR_LIST1.last_offset;
+    pgs->max_last_offset = ARR_LIST1.last_offset;
   }
 
   if (ARR_LIST1.last_offset > ARR_LIST1.max_last_offset)
@@ -222,7 +223,7 @@ double_and_int * arr_new(unsigned int sz)
 
   tmp->size = bytes_needed;
 
-  temp_ptr = gradient_structure::get()->ARRAY_MEMBLOCK_BASE + tmp->offset;
+  temp_ptr = pgs->ARRAY_MEMBLOCK_BASE + tmp->offset;
 
   (*(arr_link **) (temp_ptr )) = tmp; //put the address
                                    // tmp into the location pointed to

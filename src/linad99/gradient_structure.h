@@ -348,7 +348,7 @@ DF_FILE* get_fp() { return fp; }
 size_t NUM_GRADSTACK_BYTES_WRITTEN();
    static unsigned int get_MAX_DLINKS() { return MAX_DLINKS; }
 void save_dependent_variable_position(const prevariable&);
-   static unsigned long int max_last_offset;
+unsigned long int max_last_offset;
 
   static size_t get_GRADSTACK_BUFFER_SIZE() { return GRADSTACK_BUFFER_SIZE; }
 
