@@ -393,6 +393,72 @@ TEST_F(test_async_gradient_structure, copy_amb_lambda_async)
     element.get();
   }
 }
+TEST_F(test_async_gradient_structure, copy_arr_list1_lambda_async)
+{
+  gradient_structure gs;
+  gradient_structure* p1 = gradient_structure::get();
+  ASSERT_TRUE(p1 == &gs);
+  arr_list* ptr1 = &(gs.ARR_LIST1);
+
+  std::function<void(void)> f = [p1, ptr1]()
+  {
+    gradient_structure copy(*p1);
+    arr_list* ptr2 = &(copy.ARR_LIST1);
+
+    ASSERT_TRUE(ptr1 != ptr2);
+  };
+
+  std::vector<std::future<void>> futures;
+  for(int i = 0; i < 10; ++i)
+  {
+    futures.push_back(std::async(f));
+  }
+  for(auto& element: futures)
+  {
+    element.get();
+  }
+}
+TEST_F(test_async_gradient_structure, copy_arr_new_lambda_async)
+{
+  gradient_structure gs;
+  gradient_structure* p1 = gradient_structure::get();
+  ASSERT_TRUE(p1 == &gs);
+  arr_list* ptr1 = &(gs.ARR_LIST1);
+
+  std::function<void(void)> f = [p1, ptr1]()
+  {
+    gradient_structure copy(*p1);
+    arr_list* ptr2 = &(copy.ARR_LIST1);
+
+    ASSERT_TRUE(ptr1 != ptr2);
+    ASSERT_TRUE(copy.ARR_LIST1.get_free_last() == NULL);
+    ASSERT_TRUE(copy.ARR_LIST1.get_number_arr_links() == 0);
+    ASSERT_TRUE(copy.ARR_LIST1.get_last() == NULL);
+    ASSERT_TRUE(copy.ARR_LIST1.get_last_offset() == 0);
+
+    double_and_int* arr = arr_new(1);
+    arr_link* ptr_arr_link = *(arr_link **)arr;
+
+    ASSERT_TRUE(copy.ARR_LIST1.get_number_arr_links() == 1);
+    ASSERT_TRUE(ptr_arr_link->get_prev() == NULL);
+    ASSERT_TRUE(copy.ARR_LIST1.get_last() == ptr_arr_link);
+    ASSERT_TRUE(ptr_arr_link->get_next() == NULL);
+    ASSERT_TRUE(ptr_arr_link->get_status() == 1);
+    ASSERT_TRUE(ptr_arr_link->get_offset() == 0);
+    ASSERT_TRUE(ptr_arr_link->get_size() == sizeof(double_and_int));
+    ASSERT_TRUE(static_cast<void*>(arr) == static_cast<void*>(copy.get_ARRAY_MEMBLOCK_BASE()));
+  };
+
+  std::vector<std::future<void>> futures;
+  for(int i = 0; i < 10; ++i)
+  {
+    futures.push_back(std::async(f));
+  }
+  for(auto& element: futures)
+  {
+    element.get();
+  }
+}
 TEST_F(test_async_gradient_structure, copy_amb_lambda_async2)
 {
   gradient_structure gs;
@@ -412,7 +478,6 @@ TEST_F(test_async_gradient_structure, copy_amb_lambda_async2)
 
     ASSERT_TRUE(&gs != p2);
     ASSERT_TRUE(dptr1 != dptr2);
-    ASSERT_TRUE(static_cast<gradient_structure>(gs).get_ARRAY_MEMBLOCK_BASE() != dptr2);
     ASSERT_TRUE(gs.get_ARRAY_MEMBLOCK_BASE() != dptr2);
   };
 

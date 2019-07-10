@@ -126,6 +126,9 @@ class arr_list
   arr_link* get_last() const
     { return last; }
 
+  arr_link* get_free_last() const
+    { return free_last; }
+
    unsigned long int get_last_offset()
    {
       return last_offset;
