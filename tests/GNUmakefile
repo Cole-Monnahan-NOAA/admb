@@ -1,21 +1,13 @@
 ifeq ($(OS),Windows_NT)
-  ifeq ($(TERM),cygwin)
-  else
-  ifeq (sh.exe,$(findstring sh.exe,$(SHELL)))
-    SHELL = cmd
-    ifeq ($(SHELL),cmd)
-      MYPWD=$(shell cd)
-    else
-      MYPWD=$(shell cmd /C cd)
+  ifeq ($(strip $(TERM)),)
+    SHELL=cmd
+    ifeq ($(wildcard ..\utilities\mingw\bin\g++.exe),..\utilities\mingw\bin\g++.exe)
+      PATH:=$(shell cd)\..\utilities\mingw\bin;$(PATH)
     endif
-    PATH:=$(MYPWD)\..\utilities\mingw\bin;$(PATH);$(MYPWD)\..\utilities
   else
-    ifneq ($(TERM),xterm)
-      MYPWD=$(shell pwd)
-      PATH:=$(MYPWD)/../utilities/mingw/bin:$(PATH)
+    ifeq ($(wildcard ../utilities/mingw/bin/g++.exe),../utilities/mingw/bin/g++.exe)
+      PATH:=$(shell pwd)/../utilities/mingw/bin:$(PATH)
     endif
-    PATH:=$(PATH):$(MYPWD)/../utilities
-  endif
   endif
 endif
 
@@ -232,31 +224,31 @@ verify:
 ifeq ($(SHELL),cmd)
   ifneq ($(DEBUG),yes)
 	del ..\benchmarks-saf.txt
-	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) -C $(DIST)\examples --file=Makefile all
+	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) -C ..\examples --file=Makefile all
 	pushd ..\build\dist & ..\..\scripts\get-outputs.bat > "..\..\benchmarks-saf.txt" & popd
     ifndef SAFE_ONLY
 	del ..\benchmarks-opt.txt
-	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) FAST_OPTION=-f -C $(DIST)\examples --file=Makefile all
+	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) FAST_OPTION=-f -C ..\examples --file=Makefile all
 	pushd ..\build\dist & ..\..\scripts\get-outputs.bat > "..\..\benchmarks-opt.txt" & popd
     endif
   else
     ifndef SAFE_ONLY
 	del ..\benchmarks-opt.txt
-	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) FAST_OPTION=-f -C $(DIST)\examples --file=Makefile all
+	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) FAST_OPTION=-f -C ..\examples --file=Makefile all
 	pushd ..\build\debug & ..\..\scripts\get-outputs.bat > "..\..\benchmarks-opt.txt" & popd
     endif
 	del ..\benchmarks-saf.txt
-	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) -C $(DIST)\examples --file=Makefile all
+	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) -C ..\examples --file=Makefile all
 	pushd ..\build\debug & ..\..\scripts\get-outputs.bat > "..\..\benchmarks-saf.txt" & popd
   endif
 else
 	rm -vf ../benchmarks-saf.txt
-	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) -C $(DIST)/examples all
-	-../scripts/get-outputs.sh ${DIST}/examples/ > "../benchmarks-saf.txt"
+	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) -C ../examples all
+	-../scripts/get-outputs.sh ../examples/ > "../benchmarks-saf.txt"
   ifndef SAFE_ONLY
 	rm -vf ../benchmarks-opt.txt
-	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) FAST_OPTION=-f -C $(DIST)/examples all
-	-../scripts/get-outputs.sh ${DIST}/examples/ > "../benchmarks-opt.txt"
+	$(MAKE) DEBUG_OPTION=$(DEBUG_OPTION) FAST_OPTION=-f -C ../examples all
+	-../scripts/get-outputs.sh ../examples/ > "../benchmarks-opt.txt"
   endif
 endif
 
