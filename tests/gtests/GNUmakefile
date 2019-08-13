@@ -119,6 +119,7 @@ GTESTS_ALL=\
  test_vector.cpp\
  test_xpools.cpp\
  test_dfpool.cpp\
+ test_issues.cpp\
  main.cpp
 
 GTESTS_NEW=\
