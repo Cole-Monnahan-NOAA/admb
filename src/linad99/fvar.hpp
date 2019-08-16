@@ -1413,6 +1413,7 @@ class dvariable:public prevariable
    dvariable(const int &t);
    dvariable(kkludge_object);
    dvariable(const prevariable &);
+   dvariable(const independent_variables&);
    dvariable & operator=(const prevariable &);
    dvariable & operator =(const df1_one_variable & v);
    dvariable & operator =(const df1_two_variable & v);
@@ -1748,8 +1749,15 @@ class independent_variables:public dvector
    }
    // makes an array [ncl..ncu]
 
+   independent_variables(const dvector& values): dvector(values)
+   {
+   }
    independent_variables(unsigned int sz, double *x):dvector(sz, x)
    {
+   }
+   independent_variables(const double value): dvector(1, 1)
+   {
+     (*this)(1) = value;
    }
 
    independent_variables & operator=(const dvector & t);

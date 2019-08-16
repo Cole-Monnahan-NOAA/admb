@@ -47,7 +47,24 @@ dvar_vector::dvar_vector(const independent_variables& t)
     {
       va[i].x=(t.v)[i];
     }
-    make_indvar_list(*this);
+    gradient_structure* gs = gradient_structure::get();
+    if (gs)
+    {
+      gs->INDVAR_LIST.add(*this);
+    }
+  }
+}
+dvariable::dvariable(const independent_variables& t)
+{
+  if (t.size() >= 1)
+  {
+    gradient_structure* gs = gradient_structure::get();
+    if (gs)
+    {
+      v = gs->GRAD_LIST.create();
+      v->x = t(t.indexmin());
+      gs->INDVAR_LIST.add(*this);
+    }
   }
 }
 
@@ -152,16 +169,24 @@ void make_indvar_list(const dvar_vector& t)
     gs->INDVAR_LIST.set_addresses(t);
   }
 }
-
-void indvar_offset_list::set_addresses(const dvar_vector& t)
+void indvar_offset_list::add(const dvariable& t)
 {
+  address.push_back(&(t.v->x));
+}
+void indvar_offset_list::add(const dvar_vector& t)
+{
+  clear();
+
   int min = t.indexmin();
   int max = t.indexmax();
-  address.clear();
   for (int i = min; i <= max; ++i)
   {
     address.push_back(&(t.va[i].x));
   }
+}
+void indvar_offset_list::set_addresses(const dvar_vector& t)
+{
+  add(t);
 }
 
 /**

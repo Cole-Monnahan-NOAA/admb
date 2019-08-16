@@ -108,20 +108,165 @@ TEST_F(test_gradcalc, independent_values_to_dvar_vector)
 
   cout << results.first << ' ' << results.second << endl;
 }
-/*
-std::pair<double,dvector> gradcalc(const std::vector<double>& independent_values, std::function<dvariable(dvariable...first)> f)
+
+template <class... Args>
+std::vector<double> make_vector(double value, Args&&...args);
+template <class... Args>
+std::vector<double> make_vector(dvector& values, Args&&...args);
+template <class... Args>
+std::vector<double> make_vector(std::vector<double>& values, Args&&...args);
+
+std::vector<double> make_vector()
 {
+  std::vector<double> lst;
+  return std::move(lst);
 }
-TEST_F(test_gradcalc, varargs)
+template <class... Args>
+std::vector<double> make_vector(std::vector<double>& values, Args&&...args)
 {
-  std::pair<double,dvector> results = gradcalc({60, 61, 100}, [](dvariable a, dvariable b, dvariable c)
+  std::vector<double> lst = make_vector(args...);
+  for (double value: values)
+  {
+    lst.push_back(value);
+  }
+  return std::move(lst);
+}
+template <class... Args>
+std::vector<double> make_vector(dvector& values, Args&&...args)
+{
+  std::vector<double> lst = make_vector(args...);
+  for (int i = values.indexmin(); i <= values.indexmax(); ++i)
+  {
+    lst.push_back(values(i));
+  }
+  return std::move(lst);
+}
+template <class... Args>
+std::vector<double> make_vector(double value, Args&&...args)
+{
+  std::vector<double> lst = make_vector(args...);
+  lst.push_back(value);
+  return std::move(lst);
+}
+template <class Fn, class... Args>
+std::pair<double,dvector> compute_gradients(Fn&& fn, Args&&... args)
+{
+	/*
+  std::vector<double> lst = make_vector(args...);
+
+  int index = lst.size();
+  independent_variables independents(1, index);
+  for (double value: lst)
+  {
+    independents(index--) = value;
+  }
+  */
+
+  gradient_structure gs;
+  //dvar_vector values(independents);
+
+  objective_function_value fn_result;
+  fn_result = fn(std::forward<Args>(args)...);
+
+  double value_fn_result = value(fn_result);
+
+  dvector gradients(1, 3);
+  gradcalc(3, gradients);
+
+  return std::make_pair(value_fn_result, gradients);
+}
+
+/*
+void make_indvar_list(const dvar_vector& t)
+{
+  gradient_structure* gs = gradient_structure::get();
+  if (gs)
+  {
+    gs->INDVAR_LIST.set_addresses(t);
+  }
+}
+void indvar_offset_list::set_addresses(const dvar_vector& t)
+{
+  int min = t.indexmin();
+  int max = t.indexmax();
+  address.clear();
+  for (int i = min; i <= max; ++i)
+  {
+    address.push_back(&(t.va[i].x));
+  }
+}
+*/
+TEST_F(test_gradcalc, compute_gradients_template)
+{
+  auto fn = [](dvar_vector values, double d, std::vector<double> stdvector)
   {
     dvariable total;
-    values *= 2;
     dvar_vector results = mfexp(values);
     total = sum(results);
     return total;
-  });
+  };
+
+  dvector dv(1, 3);
+  dv(1) = 60;
+  dv(2) = 61;
+  dv(3) = 100;
+  double d = 61;
+  std::vector<double> stdvector{100};
+  std::pair<double,dvector> results = compute_gradients(fn, independent_variables(dv), d, stdvector);
+
+  cout << results.first << ' ' << results.second << endl;
+}
+TEST_F(test_gradcalc, inline_compute_gradients_template)
+{
+  dvector dv(1, 3);
+  dv(1) = 60;
+  dv(2) = 61;
+  dv(3) = 100;
+  double d = 61;
+  std::vector<double> stdvector{100};
+  std::pair<double,dvector> results = compute_gradients(
+    [](dvar_vector values, double d, std::vector<double> stdvector)
+    {
+      dvariable total;
+      dvar_vector results = mfexp(values);
+      total = sum(results);
+      return total;
+    }, independent_variables(dv), d, stdvector);
+
+  cout << results.first << ' ' << results.second << endl;
+}
+template <class Fn, class... Args>
+std::pair<double,dvector> compute_gradients2(Fn&& fn, Args&&... args)
+{
+  gradient_structure gs;
+
+  objective_function_value fn_result;
+  fn_result = fn(std::forward<Args>(args)...);
+
+  double value_fn_result = value(fn_result);
+
+  size_t nvar = gs.INDVAR_LIST.get_nvar();
+  dvector gradients(1, nvar);
+  gradcalc(nvar, gradients);
+
+  return std::make_pair(value_fn_result, gradients);
+}
+/*
+TEST_F(test_gradcalc, inline_compute_gradients_template_double)
+{
+  dvector dv(1, 2);
+  dv(1) = 60;
+  dv(2) = 61;
+  double d = 100;
+  std::vector<double> stdvector{100};
+  std::pair<double,dvector> results = compute_gradients2(
+    [](dvar_vector values, dvariable d, std::vector<double> stdvector)
+    {
+      dvariable total;
+      dvar_vector results = mfexp(values);
+      total = sum(results) + mfexp(d);
+      return total;
+    }, independent_variables(dv), independent_variables(d), stdvector);
 
   cout << results.first << ' ' << results.second << endl;
 }

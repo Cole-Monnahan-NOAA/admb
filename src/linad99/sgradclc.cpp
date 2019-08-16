@@ -187,7 +187,7 @@ void gradcalc(int nvar, const dvector& _g)
 
   for (int i=0, j=g.indexmin(); i < nvar; ++i, ++j)
   {
-    g[j] = *gradient_structure::get()->INDVAR_LIST.get_address(i);
+    g[j] = *(gs->INDVAR_LIST.get_address(i));
   }
 
   GRAD_STACK1->ptr = GRAD_STACK1->ptr_first;

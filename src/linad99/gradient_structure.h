@@ -220,6 +220,9 @@ public:
   {
     return i < address.size() ? address[i] : NULL;
   }
+  void clear() { address.clear(); }
+  void add(const dvar_vector& t);
+  void add(const dvariable& t);
   void set_addresses(const dvar_vector& t);
   size_t get_nvar() const { return address.size(); }
 };
@@ -265,7 +268,12 @@ int save_var_file_flag;
    static int save_var_flag;
 
    static unsigned int MAX_DLINKS;
+
+public:
 indvar_offset_list INDVAR_LIST;
+
+ private:
+
    static int NUM_DEPENDENT_VARIABLES;
 dependent_variables_information* DEPVARS_INFO;
 
