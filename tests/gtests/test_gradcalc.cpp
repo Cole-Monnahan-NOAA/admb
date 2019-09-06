@@ -38,7 +38,7 @@ TEST_F(test_gradcalc, issue50)
   ASSERT_DOUBLE_EQ(gradients(1), std::pow(1.0 + independents(1) - 60.0, -2));
   ASSERT_DOUBLE_EQ(gradients(2), std::pow(1.0 + independents(2) - 60.0, -2));
   ASSERT_DOUBLE_EQ(gradients(3), std::pow(1.0 + independents(3) - 60.0, -2));
- 
+
   dvector fd(1, 3);
   fd(1) = (fd2(1) - fd1(1)) / dx;
   fd(2) = (fd2(2) - fd1(2)) / dx;
@@ -151,7 +151,7 @@ std::vector<double> make_vector(double value, Args&&...args)
 template <class Fn, class... Args>
 std::pair<double,dvector> compute_gradients(Fn&& fn, Args&&... args)
 {
-	/*
+  /*
   std::vector<double> lst = make_vector(args...);
 
   int index = lst.size();
@@ -175,7 +175,6 @@ std::pair<double,dvector> compute_gradients(Fn&& fn, Args&&... args)
 
   return std::make_pair(value_fn_result, gradients);
 }
-
 /*
 void make_indvar_list(const dvar_vector& t)
 {
@@ -240,7 +239,7 @@ std::pair<double,dvector> compute_gradients2(Fn&& fn, Args&&... args)
 {
   gradient_structure gs;
 
-  objective_function_value fn_result;
+  dvariable fn_result;
   fn_result = fn(std::forward<Args>(args)...);
 
   double value_fn_result = value(fn_result);
@@ -251,7 +250,6 @@ std::pair<double,dvector> compute_gradients2(Fn&& fn, Args&&... args)
 
   return std::make_pair(value_fn_result, gradients);
 }
-/*
 TEST_F(test_gradcalc, inline_compute_gradients_template_double)
 {
   dvector dv(1, 2);
@@ -266,8 +264,85 @@ TEST_F(test_gradcalc, inline_compute_gradients_template_double)
       dvar_vector results = mfexp(values);
       total = sum(results) + mfexp(d);
       return total;
-    }, independent_variables(dv), independent_variables(d), stdvector);
+    }, dv, independent_variables(d), stdvector);
 
   cout << results.first << ' ' << results.second << endl;
 }
-*/
+#include <future>
+TEST_F(test_gradcalc, future)
+{
+  double x = 5;
+  double y = 3;
+
+  std::future<double> results_first_term(std::async([](double x, double y)
+    {
+      return x / y;
+    }, x, y));
+  std::future<double> results_second_term(std::async([](double x, double y)
+    {
+      return x * y;
+    }, x, y));
+
+  ASSERT_DOUBLE_EQ(results_first_term.get(), 5.0 / 3.0);
+  ASSERT_DOUBLE_EQ(results_second_term.get(), 5.0 * 3.0);
+}
+double mydiv(const double x, const double y) { return x / y; }
+dvariable mydvariablediv(const double x, const double y)
+{
+  dvariable result;
+  result = x / y;
+  return result;
+}
+TEST_F(test_gradcalc, futurevariable)
+{
+  double x = 5;
+  double y = 3;
+
+  std::future<double> results_first_term(std::async(mydiv, x, y));
+  std::future<double> results_second_term(std::async([](double x, double y)
+    {
+      return x * y;
+    }, x, y));
+
+  ASSERT_DOUBLE_EQ(results_first_term.get(), 5.0 / 3.0);
+  ASSERT_DOUBLE_EQ(results_second_term.get(), 5.0 * 3.0);
+}
+template <class Fn, class... Args>
+std::future<std::pair<double,dvector>> async_compute_gradients(Fn&& fn, Args&&... args)
+{
+  std::future<std::pair<double,dvector>> results(std::async([=]()
+  {
+    std::pair<double,dvector> results = compute_gradients2(
+      [](dvar_vector values, dvariable d, std::vector<double> stdvector)
+      {
+        dvariable total;
+        dvar_vector results = mfexp(values);
+        total = sum(results) + mfexp(d);
+        return total;
+      }, args...);
+      return results;
+  }));
+
+  return results;
+}
+TEST_F(test_gradcalc, async_compute_gradients)
+{
+  dvector dv(1, 2);
+  dv(1) = 60;
+  dv(2) = 61;
+  double d = 100;
+  std::vector<double> stdvector{100};
+
+  std::future<std::pair<double,dvector>> future_results = async_compute_gradients(
+    [](dvar_vector values, dvariable d, std::vector<double> stdvector)
+    {
+      dvariable total;
+      dvar_vector results = mfexp(values);
+      total = sum(results) + mfexp(d);
+      return total;
+    }, dv, independent_variables(d), stdvector);
+
+  future_results.wait();
+  std::pair<double,dvector> results = future_results.get();
+  cout << results.first << ' ' << results.second << endl;
+}
