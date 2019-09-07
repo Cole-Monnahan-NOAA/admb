@@ -310,20 +310,10 @@ TEST_F(test_gradcalc, futurevariable)
 template <class Fn, class... Args>
 std::future<std::pair<double,dvector>> async_compute_gradients(Fn&& fn, Args&&... args)
 {
-  std::future<std::pair<double,dvector>> results(std::async([=]()
-  {
-    std::pair<double,dvector> results = compute_gradients2(
-      [](dvar_vector values, dvariable d, std::vector<double> stdvector)
-      {
-        dvariable total;
-        dvar_vector results = mfexp(values);
-        total = sum(results) + mfexp(d);
-        return total;
-      }, args...);
-      return results;
-  }));
-
-  return results;
+  std::future<std::pair<double,dvector>> results(
+    std::async([=]() { return compute_gradients2(fn, args...); })
+  );
+  return std::move(results);
 }
 TEST_F(test_gradcalc, async_compute_gradients)
 {
