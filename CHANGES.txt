@@ -42,6 +42,8 @@ ADMB-git
   
   https://travis-ci.org/admb-project/admb/
 
+  Also, added Microsoft DevOps for automated builds.
+
 * Fixed parsers to avoid needing to add extra line at the end to the tpl file.
 * Added target dist to Makefile to skip building shared libraries for faster builds.
 
